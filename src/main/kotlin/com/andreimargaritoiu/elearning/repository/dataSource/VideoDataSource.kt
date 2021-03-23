@@ -1,5 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
+import com.andreimargaritoiu.elearning.model.Playlist
 import com.andreimargaritoiu.elearning.model.Video
 import com.andreimargaritoiu.elearning.repository.generic.VideoRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
@@ -9,19 +10,37 @@ import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
-import java.lang.IllegalArgumentException
+import java.util.*
+import kotlin.NoSuchElementException
 
 @Repository
-class VideoDataSource(firebaseInitialize: FirebaseInitialize): VideoRepository {
+class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository {
 
-    val collectionName = "Videos"
+    private final val collectionName = "videos"
+    private final val playlistCollectionName = "playlists"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
+    val playlistsCollectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(playlistCollectionName)
 
-    override fun getVideos(): Collection<Video> {
+    override fun getVideos(uid: Optional<String>, playlistId: Optional<String>): Collection<Video> {
         val videos = mutableListOf<Video>()
         val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
         querySnapshot.get().documents.forEach {
             videos.add(it.toObject(Video::class.java))
+        }
+
+        if (!uid.isEmpty) {
+            return videos.filter { it.uid == uid.get() }
+        }
+
+        if (!playlistId.isEmpty) {
+            val playlistQuerySnapshot: ApiFuture<QuerySnapshot> = playlistsCollectionReference.get()
+            playlistQuerySnapshot.get().documents.forEach {
+                val currentPlaylist: Playlist = it.toObject(Playlist::class.java);
+                if (currentPlaylist.id == playlistId.get()) {
+                    return videos.filter { elem -> currentPlaylist.videoRefs.contains(elem.id)  }
+                }
+            }
+            throw NoSuchElementException("Could not find playlist with id = ${playlistId.get()}")
         }
 
         return videos;
@@ -35,18 +54,13 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize): VideoRepository {
                 ?: throw NoSuchElementException("Could not find video with id = $videoId")
     }
 
-    override fun addVideo(video: Video): Video {
-        val videos = mutableListOf<Video>()
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        querySnapshot.get().documents.forEach {
-            videos.add(it.toObject(Video::class.java))
-        }
-        videos.forEach {
-            if (it.videoUrl == video.videoUrl)
-                throw IllegalArgumentException("Video with videoUrl = ${video.videoUrl} already exists")
-        }
 
-        collectionReference.document().set(video)
+    override fun addVideo(video: Video): Video {
+        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
+        if (querySnapshot.get().documents.find { it.id == video.id } == null)
+            throw NoSuchElementException("Could not find video with id = $video.id")
+
+        collectionReference.document(video.id).set(video)
         return video
     }
 

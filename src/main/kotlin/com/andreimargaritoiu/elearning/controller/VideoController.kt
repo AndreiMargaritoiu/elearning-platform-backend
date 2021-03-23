@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
+import java.util.*
+import kotlin.NoSuchElementException
 
 @RestController
 @RequestMapping("api/videos")
@@ -20,7 +22,8 @@ class VideoController(private val videoService: VideoService) {
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
-    fun getVideos(): Collection<Video> = videoService.getVideos()
+    fun getVideos(@RequestParam uid: Optional<String>, @RequestParam playlistId: Optional<String>): Collection<Video> =
+            videoService.getVideos(uid, playlistId)
 
     @GetMapping("/{videoId}")
     fun getVideo(@PathVariable videoId: String): Video = videoService.getVideo(videoId)
@@ -30,7 +33,7 @@ class VideoController(private val videoService: VideoService) {
     fun addVideo(@RequestBody video: Video): Video = videoService.addVideo(video)
 
     @PatchMapping("/{videoId}")
-    fun getVideo(@PathVariable videoId: String, @RequestBody video: Video): Video =
+    fun updateVideo(@PathVariable videoId: String, @RequestBody video: Video): Video =
             videoService.updateVideo(videoId, video)
 
     @DeleteMapping("/{videoId}")

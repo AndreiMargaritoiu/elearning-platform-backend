@@ -1,7 +1,12 @@
 package com.andreimargaritoiu.elearning.model
 
 data class Playlist (
-        val userId: String = "",
-        val name: String = "",
-        val videos: List<String> = emptyList()
+        val id: String = "",
+        val uid: String = "",
+        val title: String = "",
+        val description: String = "",
+        val category: String = "",
+        val thumbnailUrl: String = "",
+        val videoRefs: List<String> = emptyList(),
+        val createdAt: Long = 0
 )

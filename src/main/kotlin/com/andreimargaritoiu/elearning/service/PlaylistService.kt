@@ -3,18 +3,19 @@ package com.andreimargaritoiu.elearning.service
 import com.andreimargaritoiu.elearning.model.Playlist
 import com.andreimargaritoiu.elearning.repository.dataSource.PlaylistDataSource
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
-class PlaylistService (private val playlistDataSource: PlaylistDataSource) {
+class PlaylistService(private val playlistDataSource: PlaylistDataSource) {
 
-    fun getPlaylists(): Collection<Playlist> = playlistDataSource.getPlaylists()
+    fun getPlaylists(category: Optional<String>, uid: Optional<String>): Collection<Playlist> = playlistDataSource.getPlaylists(category, uid)
 
-    fun getPlaylist(PlaylistId: String): Playlist = playlistDataSource.getPlaylist(PlaylistId)
+    fun getPlaylist(playlistId: String): Playlist = playlistDataSource.getPlaylist(playlistId)
 
-    fun addPlaylist(Playlist: Playlist): Playlist = playlistDataSource.addPlaylist(Playlist)
+    fun addPlaylist(playlist: Playlist): Playlist = playlistDataSource.addPlaylist(playlist)
 
-    fun updatePlaylist(PlaylistId: String, Playlist: Playlist): Playlist = playlistDataSource.updatePlaylist(PlaylistId, Playlist)
+    fun updatePlaylist(playlistId: String, Playlist: Playlist): Playlist = playlistDataSource.updatePlaylist(playlistId, Playlist)
 
-    fun deletePlaylist(PlaylistId: String) = playlistDataSource.deletePlaylist(PlaylistId)
+    fun deletePlaylist(playlistId: String) = playlistDataSource.deletePlaylist(playlistId)
 
 }
