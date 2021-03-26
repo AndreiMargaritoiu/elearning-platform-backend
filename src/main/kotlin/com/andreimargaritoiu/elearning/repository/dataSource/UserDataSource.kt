@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException
 @Repository
 class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
 
-    val collectionName = "Users"
+    private final val collectionName = "users"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
 
     override fun getUsers(): Collection<User> {
@@ -36,11 +36,7 @@ class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
     }
 
     override fun addUser(user: User): User {
-        val users = mutableListOf<User>()
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        querySnapshot.get().documents.forEach {
-            users.add(it.toObject(User::class.java))
-        }
+        val users = getUsers()
         users.forEach {
             if (it.email == user.email) throw IllegalArgumentException("User with email = ${user.email} already exists")
         }

@@ -7,5 +7,6 @@ data class Video(
         val thumbnailUrl: String = "",
         val title: String = "",
         val description: String = "",
-        val createdAt: Long = 0
+        val createdAt: Long = 0,
+        val searchIndex: List<String> = emptyList()
 )

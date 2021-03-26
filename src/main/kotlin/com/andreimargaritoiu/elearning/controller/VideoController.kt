@@ -22,8 +22,9 @@ class VideoController(private val videoService: VideoService) {
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
-    fun getVideos(@RequestParam uid: Optional<String>, @RequestParam playlistId: Optional<String>): Collection<Video> =
-            videoService.getVideos(uid, playlistId)
+    fun getVideos(@RequestParam uid: Optional<String>, @RequestParam playlistId: Optional<String>,
+                  @RequestParam trending: Optional<Boolean>): Collection<Video> =
+            videoService.getVideos(uid, playlistId, trending)
 
     @GetMapping("/{videoId}")
     fun getVideo(@PathVariable videoId: String): Video = videoService.getVideo(videoId)

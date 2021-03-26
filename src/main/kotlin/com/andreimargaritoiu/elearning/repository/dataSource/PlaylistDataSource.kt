@@ -10,28 +10,19 @@ import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
-import java.util.*
 import kotlin.NoSuchElementException
 
 @Repository
 class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistRepository {
 
-    val collectionName = "playlists"
+    private final val collectionName = "playlists"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
 
-    override fun getPlaylists(category: Optional<String>, uid: Optional<String>): Collection<Playlist> {
+    override fun getPlaylists(): Collection<Playlist> {
         val playlists = mutableListOf<Playlist>()
         val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
         querySnapshot.get().documents.forEach {
             playlists.add(it.toObject(Playlist::class.java))
-        }
-
-        if (!category.isEmpty) {
-            return playlists.filter { it.category == category.get() }
-        }
-
-        if (!uid.isEmpty) {
-            return playlists.filter { it.uid == uid.get() }
         }
 
         return playlists;
@@ -46,11 +37,7 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
     }
 
     override fun addPlaylist(playlist: Playlist): Playlist {
-        val playlists = mutableListOf<Playlist>()
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        querySnapshot.get().documents.forEach {
-            playlists.add(it.toObject(Playlist::class.java))
-        }
+        val playlists = getPlaylists()
         playlists.forEach {
             if (it.title == playlist.title)
                 throw IllegalArgumentException("Playlist with title = ${playlist.title} already exists")

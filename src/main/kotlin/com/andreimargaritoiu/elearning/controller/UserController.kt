@@ -30,7 +30,7 @@ class UserController(private val userService: UserService) {
     fun addUser(@RequestBody User: User): User = userService.addUser(User)
 
     @PatchMapping("/{userId}")
-    fun getUser(@PathVariable userId: String, @RequestBody User: User): User =
+    fun updateUser(@PathVariable userId: String, @RequestBody User: User): User =
             userService.updateUser(userId, User)
 
     @DeleteMapping("/{userId}")
