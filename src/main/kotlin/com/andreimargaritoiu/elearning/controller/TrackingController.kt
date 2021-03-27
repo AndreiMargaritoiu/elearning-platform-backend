@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.Tracking
+import com.andreimargaritoiu.elearning.model.models.Tracking
 import com.andreimargaritoiu.elearning.service.TrackingService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

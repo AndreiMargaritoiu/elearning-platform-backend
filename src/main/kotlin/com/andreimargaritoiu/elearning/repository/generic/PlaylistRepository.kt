@@ -1,7 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.generic
 
-import com.andreimargaritoiu.elearning.model.Playlist
-import java.util.*
+import com.andreimargaritoiu.elearning.model.models.Playlist
 
 interface PlaylistRepository {
 

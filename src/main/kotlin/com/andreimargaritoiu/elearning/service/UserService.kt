@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.service
 
-import com.andreimargaritoiu.elearning.model.User
+import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.repository.dataSource.UserDataSource
 import org.springframework.stereotype.Service
 

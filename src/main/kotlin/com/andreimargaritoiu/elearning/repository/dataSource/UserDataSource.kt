@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
-import com.andreimargaritoiu.elearning.model.User
+import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.repository.generic.UserRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture

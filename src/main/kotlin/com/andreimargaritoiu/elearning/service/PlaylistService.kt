@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.service
 
-import com.andreimargaritoiu.elearning.model.Playlist
+import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.repository.dataSource.PlaylistDataSource
 import org.springframework.stereotype.Service
 import java.util.*

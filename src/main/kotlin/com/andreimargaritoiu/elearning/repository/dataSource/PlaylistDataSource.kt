@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
-import com.andreimargaritoiu.elearning.model.Playlist
+import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.repository.generic.PlaylistRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture

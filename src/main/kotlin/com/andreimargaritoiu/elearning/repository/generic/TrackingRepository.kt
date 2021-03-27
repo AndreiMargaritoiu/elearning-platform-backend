@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.generic
 
-import com.andreimargaritoiu.elearning.model.Tracking
+import com.andreimargaritoiu.elearning.model.models.Tracking
 
 interface TrackingRepository {
 

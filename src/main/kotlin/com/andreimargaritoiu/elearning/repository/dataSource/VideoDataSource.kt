@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
-import com.andreimargaritoiu.elearning.model.Video
+import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.repository.generic.VideoRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture

@@ -1,5 +1,8 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
-import com.andreimargaritoiu.elearning.model.Mentorship
+
+import com.andreimargaritoiu.elearning.model.models.Mentorship
+import com.andreimargaritoiu.elearning.model.builders.MentorshipBuilder
+import com.andreimargaritoiu.elearning.model.updates.MentorshipUpdates
 import com.andreimargaritoiu.elearning.repository.generic.MentoringRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture
@@ -8,6 +11,7 @@ import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import kotlin.NoSuchElementException
 
 @Repository
@@ -27,37 +31,44 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
     }
 
     override fun getMentorship(mentorshipId: String): Mentorship {
-        val documentReference: DocumentReference = collectionReference.document(mentorshipId)
-        val documentSnapshot: ApiFuture<DocumentSnapshot> = documentReference.get()
+        val document: ApiFuture<DocumentSnapshot> = collectionReference.document(mentorshipId).get()
 
-        return documentSnapshot.get().toObject(Mentorship::class.java)
+        return document.get().toObject(Mentorship::class.java)
                 ?: throw NoSuchElementException("Could not find mentorship with id = $mentorshipId")
     }
 
 
-    override fun addMentorship(mentorship: Mentorship): Mentorship {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == mentorship.id } == null)
-            throw NoSuchElementException("Could not find mentorship with id = $mentorship.id")
+    override fun addMentorship(mentorshipBuilder: MentorshipBuilder): Mentorship {
+        val ref: DocumentReference = collectionReference.document()
+        val mentorship = Mentorship(
+                ref.id, mentorshipBuilder.description, mentorshipBuilder.mentorId,
+                mentorshipBuilder.mentorEmail, mentorshipBuilder.price, Instant.now().toEpochMilli()
+        )
 
-        collectionReference.document(mentorship.id).set(mentorship)
+        collectionReference.document(ref.id).set(mentorship)
+
         return mentorship
     }
 
-    override fun updateMentorship(mentorshipId: String, mentorship: Mentorship): Mentorship {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == mentorshipId } == null)
-            throw NoSuchElementException("Could not find Mentorship with id = $mentorshipId")
+    override fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates): Mentorship {
+        val ref: DocumentReference = collectionReference.document(mentorshipId)
+        val updates: MutableMap<String, Any> = mutableMapOf()
+        if (mentorshipUpdates.description.isNotEmpty()) {
+            updates["description"] = mentorshipUpdates.description
+        }
+        if (mentorshipUpdates.price.toString() != "0") {
+            updates["price"] = mentorshipUpdates.price
+        }
 
-        collectionReference.document(mentorshipId).set(mentorship)
-        return mentorship
+        ref.update(updates)
+
+        return getMentorship(mentorshipId)
     }
 
     override fun deleteMentorship(mentorshipId: String) {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == mentorshipId } == null)
-            throw NoSuchElementException("Could not find mentorship with id = $mentorshipId")
+        val ref: DocumentReference = collectionReference.document(mentorshipId)
+        getMentorship(mentorshipId)
 
-        collectionReference.document(mentorshipId).delete()
+        ref.delete()
     }
 }

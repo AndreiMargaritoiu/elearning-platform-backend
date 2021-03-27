@@ -1,7 +1,7 @@
 package com.andreimargaritoiu.elearning.datasource.mock
 
 import com.andreimargaritoiu.elearning.datasource.BankDataSource
-import com.andreimargaritoiu.elearning.model.Bank
+import com.andreimargaritoiu.elearning.model.models.Bank
 import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
 

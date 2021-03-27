@@ -1,10 +1,8 @@
 package com.andreimargaritoiu.elearning.service
 
-import com.andreimargaritoiu.elearning.model.Playlist
-import com.andreimargaritoiu.elearning.model.Video
+import com.andreimargaritoiu.elearning.model.models.Playlist
+import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.repository.dataSource.VideoDataSource
-import com.google.api.core.ApiFuture
-import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -35,9 +33,9 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
             }
         }
 
-        if (trending.get()) {
+        if (!trending.isEmpty && trending.get()) {
             return videos.filter { elem ->
-                Instant.ofEpochMilli(elem.createdAt).plus(3, ChronoUnit.HOURS).isAfter(Instant.now());
+                Instant.ofEpochMilli(elem.createdAt).plus(1, ChronoUnit.DAYS).isAfter(Instant.now());
             }
         }
 

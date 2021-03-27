@@ -1,6 +1,8 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.Mentorship
+import com.andreimargaritoiu.elearning.model.models.Mentorship
+import com.andreimargaritoiu.elearning.model.builders.MentorshipBuilder
+import com.andreimargaritoiu.elearning.model.updates.MentorshipUpdates
 import com.andreimargaritoiu.elearning.service.MentoringService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,14 +29,15 @@ class MentoringController(private val mentoringService: MentoringService) {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    fun addMentorship(@RequestBody mentorship: Mentorship): Mentorship = mentoringService.addMentorship(mentorship)
+    fun addMentorship(@RequestBody mentorshipBuilder: MentorshipBuilder): Mentorship =
+            mentoringService.addMentorship(mentorshipBuilder)
 
-    @PatchMapping("/{MentoringId}")
-    fun updateMentorship(@PathVariable mentorshipId: String, @RequestBody mentorship: Mentorship): Mentorship =
-            mentoringService.updateMentorship(mentorshipId, mentorship)
+    @PatchMapping("/{mentorshipId}")
+    fun updateMentorship(@PathVariable mentorshipId: String, @RequestBody mentorshipUpdates: MentorshipUpdates):
+            Mentorship = mentoringService.updateMentorship(mentorshipId, mentorshipUpdates)
 
-    @DeleteMapping("/{MentoringId}")
+    @DeleteMapping("/{mentorshipId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteMentorship(@PathVariable mentorshipId: String): Unit = mentoringService.deleteMentorship(mentorshipId) // Unit = void
+    fun deleteMentorship(@PathVariable mentorshipId: String) = mentoringService.deleteMentorship(mentorshipId)
 
 }

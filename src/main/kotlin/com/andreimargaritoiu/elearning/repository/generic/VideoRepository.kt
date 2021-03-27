@@ -1,7 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.generic
 
-import com.andreimargaritoiu.elearning.model.Video
-import java.util.*
+import com.andreimargaritoiu.elearning.model.models.Video
 
 interface VideoRepository {
 

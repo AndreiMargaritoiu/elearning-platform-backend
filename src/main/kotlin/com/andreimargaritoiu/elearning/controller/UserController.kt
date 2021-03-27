@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.User
+import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -35,6 +35,6 @@ class UserController(private val userService: UserService) {
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable userId: String): Unit = userService.deleteUser(userId) // Unit = void
+    fun deleteUser(@PathVariable userId: String) = userService.deleteUser(userId) // Unit = void
 
 }

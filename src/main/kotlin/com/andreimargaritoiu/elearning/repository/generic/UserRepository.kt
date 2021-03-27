@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.generic
 
-import com.andreimargaritoiu.elearning.model.User
+import com.andreimargaritoiu.elearning.model.models.User
 
 interface UserRepository {
 

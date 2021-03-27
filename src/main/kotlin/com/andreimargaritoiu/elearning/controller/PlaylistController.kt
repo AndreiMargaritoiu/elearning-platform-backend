@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.Playlist
+import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.service.PlaylistService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -38,6 +38,6 @@ class PlaylistController(private val playlistService: PlaylistService) {
 
     @DeleteMapping("/{playlistId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deletePlaylist(@PathVariable playlistId: String): Unit = playlistService.deletePlaylist(playlistId) // Unit = void
+    fun deletePlaylist(@PathVariable playlistId: String) = playlistService.deletePlaylist(playlistId) // Unit = void
 
 }

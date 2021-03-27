@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.Bank
+import com.andreimargaritoiu.elearning.model.models.Bank
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

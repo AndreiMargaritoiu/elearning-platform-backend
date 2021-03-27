@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.service
 
-import com.andreimargaritoiu.elearning.model.Tracking
+import com.andreimargaritoiu.elearning.model.models.Tracking
 import com.andreimargaritoiu.elearning.repository.dataSource.TrackingDataSource
 import org.springframework.stereotype.Service
 

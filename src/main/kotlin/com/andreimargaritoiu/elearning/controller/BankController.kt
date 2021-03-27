@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.Bank
+import com.andreimargaritoiu.elearning.model.models.Bank
 import com.andreimargaritoiu.elearning.service.BankService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

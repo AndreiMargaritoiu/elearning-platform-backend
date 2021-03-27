@@ -1,6 +1,6 @@
 package com.andreimargaritoiu.elearning.datasource
 
-import com.andreimargaritoiu.elearning.model.Bank
+import com.andreimargaritoiu.elearning.model.models.Bank
 
 interface BankDataSource {
 

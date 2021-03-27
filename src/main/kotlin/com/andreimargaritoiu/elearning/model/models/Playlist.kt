@@ -1,4 +1,4 @@
-package com.andreimargaritoiu.elearning.model
+package com.andreimargaritoiu.elearning.model.models
 
 data class Playlist (
         val id: String = "",
