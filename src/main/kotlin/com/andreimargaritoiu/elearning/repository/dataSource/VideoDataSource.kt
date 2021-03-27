@@ -1,6 +1,7 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
 import com.andreimargaritoiu.elearning.model.models.Video
+import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.generic.VideoRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture
@@ -28,10 +29,9 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
     }
 
     override fun getVideo(videoId: String): Video {
-        val documentReference: DocumentReference = collectionReference.document(videoId)
-        val documentSnapshot: ApiFuture<DocumentSnapshot> = documentReference.get()
+        val document: ApiFuture<DocumentSnapshot> = collectionReference.document(videoId).get()
 
-        return documentSnapshot.get().toObject(Video::class.java)
+        return document.get().toObject(Video::class.java)
                 ?: throw NoSuchElementException("Could not find video with id = $videoId")
     }
 
@@ -45,20 +45,26 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
         return video
     }
 
-    override fun updateVideo(videoId: String, video: Video): Video {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == videoId } == null)
-            throw NoSuchElementException("Could not find video with id = $videoId")
+    override fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video {
+        val ref: DocumentReference = collectionReference.document(videoId)
+        val updates: MutableMap<String, Any> = mutableMapOf()
+        if (videoUpdates.description.isNotEmpty()) {
+            updates["description"] = videoUpdates.description
+        }
+        if (videoUpdates.title.isNotEmpty() && videoUpdates.searchIndex.isNotEmpty()) {
+            updates["title"] = videoUpdates.title
+            updates["searchIndex"] = videoUpdates.searchIndex
+        }
 
-        collectionReference.document(videoId).set(video)
-        return video
+        ref.update(updates)
+
+        return getVideo(videoId)
     }
 
     override fun deleteVideo(videoId: String) {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == videoId } == null)
-            throw NoSuchElementException("Could not find video with id = $videoId")
+        val ref: DocumentReference = collectionReference.document(videoId)
+        getVideo(videoId)
 
-        collectionReference.document(videoId).delete()
+        ref.delete()
     }
 }

@@ -1,6 +1,7 @@
 package com.andreimargaritoiu.elearning.controller
 
 import com.andreimargaritoiu.elearning.model.models.Video
+import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.service.VideoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -34,11 +35,11 @@ class VideoController(private val videoService: VideoService) {
     fun addVideo(@RequestBody video: Video): Video = videoService.addVideo(video)
 
     @PatchMapping("/{videoId}")
-    fun updateVideo(@PathVariable videoId: String, @RequestBody video: Video): Video =
-            videoService.updateVideo(videoId, video)
+    fun updateVideo(@PathVariable videoId: String, @RequestBody videoUpdates: VideoUpdates): Video =
+            videoService.updateVideo(videoId, videoUpdates)
 
     @DeleteMapping("/{videoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteVideo(@PathVariable videoId: String) = videoService.deleteVideo(videoId) // Unit = void
+    fun deleteVideo(@PathVariable videoId: String) = videoService.deleteVideo(videoId)
 
 }

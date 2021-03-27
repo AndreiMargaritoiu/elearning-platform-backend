@@ -1,6 +1,7 @@
 package com.andreimargaritoiu.elearning.controller
 
 import com.andreimargaritoiu.elearning.model.models.Playlist
+import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.service.PlaylistService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -33,11 +34,11 @@ class PlaylistController(private val playlistService: PlaylistService) {
     fun addPlaylist(@RequestBody playlist: Playlist): Playlist = playlistService.addPlaylist(playlist)
 
     @PatchMapping("/{playlistId}")
-    fun updatePlaylist(@PathVariable playlistId: String, @RequestBody playlists: Playlist): Playlist =
-            playlistService.updatePlaylist(playlistId, playlists)
+    fun updatePlaylist(@PathVariable playlistId: String, @RequestBody playlistsUpdates: PlaylistUpdates): Playlist =
+            playlistService.updatePlaylist(playlistId, playlistsUpdates)
 
     @DeleteMapping("/{playlistId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deletePlaylist(@PathVariable playlistId: String) = playlistService.deletePlaylist(playlistId) // Unit = void
+    fun deletePlaylist(@PathVariable playlistId: String) = playlistService.deletePlaylist(playlistId)
 
 }

@@ -2,6 +2,8 @@ package com.andreimargaritoiu.elearning.service
 
 import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.models.Video
+import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
+import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.dataSource.VideoDataSource
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -13,11 +15,24 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
 
     fun getVideo(videoId: String): Video = videoDataSource.getVideo(videoId)
     fun addVideo(Video: Video): Video = videoDataSource.addVideo(Video)
-    fun updateVideo(videoId: String, Video: Video): Video = videoDataSource.updateVideo(videoId, Video)
-    fun deleteVideo(videoId: String) = videoDataSource.deleteVideo(videoId)
+    fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video =
+            videoDataSource.updateVideo(videoId, videoUpdates)
+    fun deleteVideo(videoId: String) {
+        videoDataSource.deleteVideo(videoId)
+        val playlists: Collection<Playlist> =
+                playlistService.getPlaylists(category = Optional.empty(), uid = Optional.empty())
+        playlists.forEach {
+            if (it.videoRefs.contains(videoId)) {
+                print("hello")
+                val updates = PlaylistUpdates(videoRefs = it.videoRefs.filter { itt -> itt != videoId })
+                playlistService.updatePlaylist(it.id, updates)
+            }
+        }
+    }
+
     fun getVideos(uid: Optional<String>, playlistId: Optional<String>,
-                           trending: Optional<Boolean>): Collection<Video> {
-        val videos: Collection<Video>  = videoDataSource.getVideos()
+                  trending: Optional<Boolean>): Collection<Video> {
+        val videos: Collection<Video> = videoDataSource.getVideos()
 
         if (!uid.isEmpty) {
             return videos.filter { it.uid == uid.get() }

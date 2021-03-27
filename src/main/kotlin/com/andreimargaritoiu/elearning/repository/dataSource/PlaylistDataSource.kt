@@ -1,6 +1,7 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
 import com.andreimargaritoiu.elearning.model.models.Playlist
+import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.repository.generic.PlaylistRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture
@@ -29,10 +30,9 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
     }
 
     override fun getPlaylist(playlistId: String): Playlist {
-        val documentReference: DocumentReference = collectionReference.document(playlistId)
-        val documentSnapshot: ApiFuture<DocumentSnapshot> = documentReference.get()
+        val document: ApiFuture<DocumentSnapshot> = collectionReference.document(playlistId).get()
 
-        return documentSnapshot.get().toObject(Playlist::class.java)
+        return document.get().toObject(Playlist::class.java)
                 ?: throw NoSuchElementException("Could not find playlist with id = $playlistId")
     }
 
@@ -49,20 +49,29 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
         return playlist
     }
 
-    override fun updatePlaylist(playlistId: String, playlist: Playlist): Playlist {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == playlistId } == null)
-            throw NoSuchElementException("Could not find playlist with id = $playlistId")
+    override fun updatePlaylist(playlistId: String, playlistUpdates: PlaylistUpdates): Playlist {
+        val ref: DocumentReference = collectionReference.document(playlistId)
+        val updates: MutableMap<String, Any> = mutableMapOf()
+        if (playlistUpdates.description.isNotEmpty()) {
+            updates["description"] = playlistUpdates.description
+        }
+        if (playlistUpdates.title.isNotEmpty() && playlistUpdates.searchIndex.isNotEmpty()) {
+            updates["title"] = playlistUpdates.title
+            updates["searchIndex"] = playlistUpdates.searchIndex
+        }
+        if (playlistUpdates.videoRefs.isNotEmpty()) {
+            updates["videoRefs"] = playlistUpdates.videoRefs
+        }
 
-        collectionReference.document(playlistId).set(playlist)
-        return playlist
+        ref.update(updates)
+
+        return getPlaylist(playlistId)
     }
 
     override fun deletePlaylist(playlistId: String) {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == playlistId } == null)
-            throw NoSuchElementException("Could not find playlist with id = $playlistId")
+        val ref: DocumentReference = collectionReference.document(playlistId)
+        getPlaylist(playlistId)
 
-        collectionReference.document(playlistId).delete()
+        ref.delete()
     }
 }

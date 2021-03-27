@@ -2,9 +2,11 @@ package com.andreimargaritoiu.elearning.service
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
+import com.google.cloud.storage.Bucket
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
+import com.google.firebase.cloud.StorageClient
 import org.springframework.stereotype.Service
 import java.io.FileInputStream
 import javax.annotation.PostConstruct
@@ -19,6 +21,7 @@ class FirebaseInitialize {
             val options = FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://elearning-platform-e75ed.firebaseio.com")
+                    .setStorageBucket("elearning-platform-e75ed.appspot.com")
                     .build()
             FirebaseApp.initializeApp(options)
         } catch (e: Exception) {
@@ -27,5 +30,6 @@ class FirebaseInitialize {
     }
 
     fun getFirebase(): Firestore = FirestoreClient.getFirestore()
+    fun getStorage(): Bucket = StorageClient.getInstance().bucket();
 
 }
