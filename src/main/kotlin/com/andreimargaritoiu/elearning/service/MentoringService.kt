@@ -5,6 +5,7 @@ import com.andreimargaritoiu.elearning.model.builders.MentorshipBuilder
 import com.andreimargaritoiu.elearning.model.updates.MentorshipUpdates
 import com.andreimargaritoiu.elearning.repository.dataSource.MentoringDataSource
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class MentoringService(private val mentoringDataSource: MentoringDataSource) {
@@ -15,6 +16,13 @@ class MentoringService(private val mentoringDataSource: MentoringDataSource) {
     fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates): Mentorship =
             mentoringDataSource.updateMentorship(mentorshipId, mentorshipUpdates)
     fun deleteMentorship(mentorshipId: String) = mentoringDataSource.deleteMentorship(mentorshipId)
-    fun getMentorships(): Collection<Mentorship> = mentoringDataSource.getMentorships();
-    
+    fun getMentorships(uid: Optional<String>): Collection<Mentorship> {
+        val mentorships: Collection<Mentorship> = mentoringDataSource.getMentorships()
+
+        if (!uid.isEmpty) {
+            return mentorships.filter { it.mentorId == uid.get() }
+        }
+
+        return mentorships
+    }
 }

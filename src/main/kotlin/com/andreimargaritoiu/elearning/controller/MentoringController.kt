@@ -8,9 +8,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
+import java.util.*
+import kotlin.NoSuchElementException
 
 @RestController
 @RequestMapping("api/mentoring")
+@CrossOrigin
 class MentoringController(private val mentoringService: MentoringService) {
 
     @ExceptionHandler(NoSuchElementException::class)
@@ -22,7 +25,7 @@ class MentoringController(private val mentoringService: MentoringService) {
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
-    fun getMentorships(): Collection<Mentorship> = mentoringService.getMentorships()
+    fun getMentorships(@RequestParam uid: Optional<String>): Collection<Mentorship> = mentoringService.getMentorships(uid)
 
     @GetMapping("/{mentorshipId}")
     fun getMentorship(@PathVariable mentorshipId: String): Mentorship = mentoringService.getMentorship(mentorshipId)

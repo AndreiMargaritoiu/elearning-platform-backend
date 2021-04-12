@@ -1,6 +1,8 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
+import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.models.User
+import com.andreimargaritoiu.elearning.model.updates.UserUpdates
 import com.andreimargaritoiu.elearning.repository.generic.UserRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture
@@ -28,10 +30,9 @@ class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
     }
 
     override fun getUser(userId: String): User {
-        val documentReference: DocumentReference = collectionReference.document(userId)
-        val documentSnapshot: ApiFuture<DocumentSnapshot> = documentReference.get()
+        val document: ApiFuture<DocumentSnapshot> = collectionReference.document(userId).get()
 
-        return documentSnapshot.get().toObject(User::class.java)
+        return document.get().toObject(User::class.java)
                 ?: throw NoSuchElementException("Could not find user with id = $userId")
     }
 
@@ -45,20 +46,24 @@ class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
         return user
     }
 
-    override fun updateUser(userId: String, user: User): User {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == userId } == null)
-            throw NoSuchElementException("Could not find user with id = $userId")
+    override fun updateUser(userId: String, userUpdates: UserUpdates): User {
+        val ref: DocumentReference = collectionReference.document(userId)
+        val updates: MutableMap<String, Any> = mutableMapOf()
+        if (userUpdates.profilePictureUrl.isNotEmpty()) {
+            updates["profilePictureUrl"] = userUpdates.profilePictureUrl
+        }
+        if (userUpdates.following.isNotEmpty()) {
+            updates["following"] = userUpdates.following
+        }
 
-        collectionReference.document(userId).set(user)
-        return user
+        ref.update(updates)
+        return getUser(userId)
     }
 
     override fun deleteUser(userId: String) {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == userId } == null)
-            throw NoSuchElementException("Could not find user with id = $userId")
+        val ref: DocumentReference = collectionReference.document(userId)
+        getUser(userId)
 
-        collectionReference.document(userId).delete()
+        ref.delete()
     }
 }

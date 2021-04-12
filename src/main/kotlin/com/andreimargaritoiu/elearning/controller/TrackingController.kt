@@ -9,6 +9,7 @@ import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("api/tracking")
+@CrossOrigin
 class TrackingController(private val trackingService: TrackingService) {
 
     @ExceptionHandler(NoSuchElementException::class)
