@@ -35,15 +35,20 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
         val document: ApiFuture<DocumentSnapshot> = collectionReference.document(mentorshipId).get()
 
         return document.get().toObject(Mentorship::class.java)
-                ?: throw NoSuchElementException("Could not find mentorship with id = $mentorshipId")
+            ?: throw NoSuchElementException("Could not find mentorship with id = $mentorshipId")
     }
 
 
     override fun addMentorship(mentorshipBuilder: MentorshipBuilder): Mentorship {
         val ref: DocumentReference = collectionReference.document()
         val mentorship = Mentorship(
-                ref.id, mentorshipBuilder.description, mentorshipBuilder.mentorId,
-                mentorshipBuilder.mentorEmail, mentorshipBuilder.price, Instant.now().toEpochMilli()
+            ref.id,
+            mentorshipBuilder.description,
+            mentorshipBuilder.mentorId,
+            mentorshipBuilder.mentorEmail,
+            mentorshipBuilder.price,
+            Instant.now().toEpochMilli(),
+            mentorshipBuilder.category
         )
 
         collectionReference.document(ref.id).set(mentorship)

@@ -1,5 +1,6 @@
 package com.andreimargaritoiu.elearning.service
 
+import com.andreimargaritoiu.elearning.model.builders.VideoBuilder
 import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
@@ -14,7 +15,7 @@ import java.util.*
 class VideoService(private val videoDataSource: VideoDataSource, private val playlistService: PlaylistService) {
 
     fun getVideo(videoId: String): Video = videoDataSource.getVideo(videoId)
-    fun addVideo(Video: Video): Video = videoDataSource.addVideo(Video)
+    fun addVideo(videoBuilder: VideoBuilder): Video = videoDataSource.addVideo(videoBuilder)
     fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video =
             videoDataSource.updateVideo(videoId, videoUpdates)
     fun deleteVideo(videoId: String) {

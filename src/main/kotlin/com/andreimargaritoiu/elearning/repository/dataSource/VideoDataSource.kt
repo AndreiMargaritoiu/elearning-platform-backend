@@ -1,5 +1,7 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
+import com.andreimargaritoiu.elearning.model.builders.VideoBuilder
+import com.andreimargaritoiu.elearning.model.models.Mentorship
 import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.generic.VideoRepository
@@ -10,6 +12,7 @@ import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import kotlin.NoSuchElementException
 
 @Repository
@@ -36,13 +39,25 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
     }
 
 
-    override fun addVideo(video: Video): Video {
-        val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
-        if (querySnapshot.get().documents.find { it.id == video.id } == null)
-            throw NoSuchElementException("Could not find video with id = $video.id")
+    override fun addVideo(videoBuilder: VideoBuilder): Video {
+//        val ref: DocumentReference = collectionReference.document()
+        val video = Video(
+            videoBuilder.id, videoBuilder.uid, videoBuilder.videoUrl, videoBuilder.thumbnailUrl,
+            videoBuilder.title, videoBuilder.description, Instant.now().toEpochMilli(), videoBuilder.searchIndex
+        )
 
         collectionReference.document(video.id).set(video)
         return video
+
+//        val ref: DocumentReference = collectionReference.document()
+//        val mentorship = Mentorship(
+//            ref.id, mentorshipBuilder.description, mentorshipBuilder.mentorId,
+//            mentorshipBuilder.mentorEmail, mentorshipBuilder.price, Instant.now().toEpochMilli()
+//        )
+//
+//        collectionReference.document(ref.id).set(mentorship)
+//
+//        return mentorship
     }
 
     override fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video {

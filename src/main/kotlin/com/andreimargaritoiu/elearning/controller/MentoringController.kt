@@ -18,14 +18,17 @@ class MentoringController(private val mentoringService: MentoringService) {
 
     @ExceptionHandler(NoSuchElementException::class)
     fun handleNotFound(e: NoSuchElementException): ResponseEntity<String> =
-            ResponseEntity(e.message, HttpStatus.NOT_FOUND)
+        ResponseEntity(e.message, HttpStatus.NOT_FOUND)
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleNotFound(e: IllegalArgumentException): ResponseEntity<String> =
-            ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
-    fun getMentorships(@RequestParam uid: Optional<String>): Collection<Mentorship> = mentoringService.getMentorships(uid)
+    fun getMentorships(
+        @RequestParam uid: Optional<String>,
+        @RequestParam category: Optional<Collection<String>>
+    ): Collection<Mentorship> = mentoringService.getMentorships(uid, category)
 
     @GetMapping("/{mentorshipId}")
     fun getMentorship(@PathVariable mentorshipId: String): Mentorship = mentoringService.getMentorship(mentorshipId)
@@ -33,7 +36,7 @@ class MentoringController(private val mentoringService: MentoringService) {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     fun addMentorship(@RequestBody mentorshipBuilder: MentorshipBuilder): Mentorship =
-            mentoringService.addMentorship(mentorshipBuilder)
+        mentoringService.addMentorship(mentorshipBuilder)
 
     @PatchMapping("/{mentorshipId}")
     fun updateMentorship(@PathVariable mentorshipId: String, @RequestBody mentorshipUpdates: MentorshipUpdates):

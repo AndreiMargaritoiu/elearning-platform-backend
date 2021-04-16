@@ -1,6 +1,7 @@
 package com.andreimargaritoiu.elearning.model.builders
 
 data class VideoBuilder (
+    val id: String = "",
     val uid: String = "",
     val videoUrl: String = "",
     val thumbnailUrl: String = "",

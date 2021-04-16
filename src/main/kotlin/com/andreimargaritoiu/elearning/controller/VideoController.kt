@@ -1,5 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
+import com.andreimargaritoiu.elearning.model.builders.VideoBuilder
 import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.service.VideoService
@@ -33,7 +34,7 @@ class VideoController(private val videoService: VideoService) {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    fun addVideo(@RequestBody video: Video): Video = videoService.addVideo(video)
+    fun addVideo(@RequestBody videoBuilder: VideoBuilder): Video = videoService.addVideo(videoBuilder)
 
     @PatchMapping("/{videoId}")
     fun updateVideo(@PathVariable videoId: String, @RequestBody videoUpdates: VideoUpdates): Video =

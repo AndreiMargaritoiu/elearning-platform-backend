@@ -6,5 +6,6 @@ data class Mentorship (
         val mentorId: String = "",
         val mentorEmail: String = "",
         val price: Long = 0,
-        val createdAt: Long = 0
+        val createdAt: Long = 0,
+        val category: String = ""
 )
