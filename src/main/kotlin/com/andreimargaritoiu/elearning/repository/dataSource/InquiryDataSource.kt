@@ -2,19 +2,22 @@ package com.andreimargaritoiu.elearning.repository.dataSource
 
 import com.andreimargaritoiu.elearning.model.builders.InquiryBuilder
 import com.andreimargaritoiu.elearning.model.models.Inquiry
+import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.repository.generic.InquiryRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
+import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.time.Instant
+import java.util.*
 
 @Repository
 class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryRepository {
 
-    private final val collectionName = "inquiry"
+    private final val collectionName = "inquiries"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
 
     override fun getInquiries(): Collection<Inquiry> {
@@ -27,6 +30,12 @@ class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryReposito
         return inquiries
     }
 
+    fun getInquiry(inquiryId: String): Inquiry {
+        val document: ApiFuture<DocumentSnapshot> = collectionReference.document(inquiryId).get()
+
+        return document.get().toObject(Inquiry::class.java)
+            ?: throw NoSuchElementException("Could not find inquiry with id = $inquiryId")
+    }
 
     override fun addInquiry(inquiryBuilder: InquiryBuilder): Inquiry {
         val ref: DocumentReference = collectionReference.document()
@@ -43,7 +52,7 @@ class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryReposito
         return inquiry
     }
 
-    override fun updateInquiries(inquiries: Collection<String>) {
+    override fun updateInquiries(inquiries: List<String>) {
         // TODO check if there is no inexistant inquiry
 //        val appInquiries = getInquiries();
 //        appInquiries.forEach {
@@ -53,10 +62,18 @@ class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryReposito
 //                throw IllegalArgumentException("Inquiry already exists")
 //        }
 
+//        print(inquiries)
+//
+//        val inquiriesList: Array<String> = inquiries.split(',').toTypedArray();
+//
+//        print(inquiriesList[0])
+//        print(inquiriesList[1])
+//        print(inquiriesList[2])
+
         inquiries.forEach {
             val ref: DocumentReference = collectionReference.document(it)
             val updates: MutableMap<String, Any> = mutableMapOf()
-            updates["isRead"] = true
+            updates["read"] = true
 
             ref.update(updates)
         }

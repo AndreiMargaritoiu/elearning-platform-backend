@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
+import java.util.*
 
 @RestController
 @RequestMapping("api/users")
@@ -27,7 +28,7 @@ class UserController(private val userService: UserService) {
     @GetMapping("/{userId}")
     fun getUser(@PathVariable userId: String): User = userService.getUser(userId)
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addUser(@RequestBody User: User): User = userService.addUser(User)
 

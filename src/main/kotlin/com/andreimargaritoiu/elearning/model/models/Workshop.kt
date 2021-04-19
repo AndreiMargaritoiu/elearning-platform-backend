@@ -5,7 +5,8 @@ data class Workshop(
     val description: String = "",
     val tag: String = "",
     val location: String = "",
+    val thumbnailUrl: String = "",
     val date: Long = 0,
-    val isOnline: Boolean = false,
+    val onlineEvent: Boolean = false,
     val participants: List<String> = emptyList()
 )

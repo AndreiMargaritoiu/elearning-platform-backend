@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
+import java.util.*
 
 @RestController
 @RequestMapping("api/tracking")
@@ -23,7 +24,7 @@ class TrackingController(private val trackingService: TrackingService) {
     @GetMapping
     fun getTrackings(): Collection<Tracking> = trackingService.getTrackings()
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addTracking(@RequestBody tracking: Tracking) = trackingService.addTracking(tracking)
 

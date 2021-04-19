@@ -7,6 +7,6 @@ interface InquiryRepository {
 
     fun getInquiries(): Collection<Inquiry>
     fun addInquiry(inquiryBuilder: InquiryBuilder): Inquiry
-    fun updateInquiries(inquiries: Collection<String>)
+    fun updateInquiries(inquiries: List<String>)
 
 }

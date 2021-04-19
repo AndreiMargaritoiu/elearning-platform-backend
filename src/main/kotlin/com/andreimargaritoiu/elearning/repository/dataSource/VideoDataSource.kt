@@ -1,7 +1,6 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
 import com.andreimargaritoiu.elearning.model.builders.VideoBuilder
-import com.andreimargaritoiu.elearning.model.models.Mentorship
 import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.generic.VideoRepository
@@ -13,7 +12,7 @@ import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import kotlin.NoSuchElementException
+import java.util.*
 
 @Repository
 class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository {

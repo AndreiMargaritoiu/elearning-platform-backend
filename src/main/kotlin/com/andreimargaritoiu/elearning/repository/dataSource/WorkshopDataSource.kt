@@ -2,7 +2,6 @@ package com.andreimargaritoiu.elearning.repository.dataSource
 
 import com.andreimargaritoiu.elearning.model.models.Workshop
 import com.andreimargaritoiu.elearning.model.builders.WorkshopBuilder
-import com.andreimargaritoiu.elearning.model.models.Mentorship
 import com.andreimargaritoiu.elearning.repository.generic.WorkshopRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture
@@ -11,14 +10,12 @@ import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
-import java.time.Instant
 import java.util.*
-import kotlin.NoSuchElementException
 
 @Repository
 class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepository {
 
-    private final val collectionName = "workshop"
+    private final val collectionName = "workshops"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
 
     override fun getWorkshops(): Collection<Workshop> {
@@ -45,8 +42,9 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
             workshopBuilder.description,
             workshopBuilder.tag,
             workshopBuilder.location,
+            workshopBuilder.thumbnailUrl,
             workshopBuilder.date,
-            workshopBuilder.isOnline,
+            workshopBuilder.onlineEvent,
             emptyList(),
         )
 

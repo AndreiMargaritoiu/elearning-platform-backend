@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
-import kotlin.NoSuchElementException
+import java.util.*
 
 @RestController
 @RequestMapping("api/inquiries")
@@ -22,17 +22,17 @@ class InquiryController(private val inquiryService: InquiryService) {
     fun handleNotFound(e: IllegalArgumentException): ResponseEntity<String> =
         ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
-    @GetMapping
+    @GetMapping("/{userId}")
     fun getInquiries(
-        @RequestParam uid: String
-    ): Collection<Inquiry> = inquiryService.getInquiries(uid)
+        @PathVariable userId: String
+    ): Collection<Inquiry> = inquiryService.getInquiries(userId)
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addInquiry(@RequestBody InquiryBuilder: InquiryBuilder): Inquiry =
         inquiryService.addInquiry(InquiryBuilder)
 
-    @PatchMapping("/{inquiryId}")
-    fun updateInquiry(@RequestBody inquiries: Collection<String>) = inquiryService.updateInquiries(inquiries)
+    @PatchMapping
+    fun updateInquiry(@RequestBody inquiries: List<String>) = inquiryService.updateInquiries(inquiries)
 
 }
