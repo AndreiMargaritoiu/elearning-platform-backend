@@ -24,7 +24,6 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
                 playlistService.getPlaylists(category = Optional.empty(), uid = Optional.empty())
         playlists.forEach {
             if (it.videoRefs.contains(videoId)) {
-                print("hello")
                 val updates = PlaylistUpdates(videoRefs = it.videoRefs.filter { itt -> itt != videoId })
                 playlistService.updatePlaylist(it.id, updates)
             }
@@ -51,7 +50,7 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
 
         if (!trending.isEmpty && trending.get()) {
             return videos.filter { elem ->
-                Instant.ofEpochMilli(elem.createdAt).plus(1, ChronoUnit.DAYS).isAfter(Instant.now());
+                Instant.ofEpochMilli(elem.createdAt).plus(100, ChronoUnit.DAYS).isAfter(Instant.now());
             }
         }
 

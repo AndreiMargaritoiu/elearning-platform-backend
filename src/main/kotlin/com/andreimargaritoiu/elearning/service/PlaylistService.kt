@@ -1,5 +1,6 @@
 package com.andreimargaritoiu.elearning.service
 
+import com.andreimargaritoiu.elearning.model.builders.PlaylistBuilder
 import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.repository.dataSource.PlaylistDataSource
@@ -10,7 +11,7 @@ import java.util.*
 class PlaylistService(private val playlistDataSource: PlaylistDataSource) {
 
     fun getPlaylist(playlistId: String): Playlist = playlistDataSource.getPlaylist(playlistId)
-    fun addPlaylist(playlist: Playlist): Playlist = playlistDataSource.addPlaylist(playlist)
+    fun addPlaylist(playlistBuilder: PlaylistBuilder): Playlist = playlistDataSource.addPlaylist(playlistBuilder)
     fun updatePlaylist(playlistId: String, playlistsUpdates: PlaylistUpdates): Playlist
             = playlistDataSource.updatePlaylist(playlistId, playlistsUpdates)
     fun deletePlaylist(playlistId: String) = playlistDataSource.deletePlaylist(playlistId)

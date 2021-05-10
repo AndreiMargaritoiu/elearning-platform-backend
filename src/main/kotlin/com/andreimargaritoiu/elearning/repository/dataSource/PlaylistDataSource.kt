@@ -1,6 +1,8 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
+import com.andreimargaritoiu.elearning.model.builders.PlaylistBuilder
 import com.andreimargaritoiu.elearning.model.models.Playlist
+import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.repository.generic.PlaylistRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
@@ -11,6 +13,7 @@ import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
+import java.time.Instant
 import java.util.*
 
 @Repository
@@ -36,16 +39,25 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
                 ?: throw NoSuchElementException("Could not find playlist with id = $playlistId")
     }
 
-    override fun addPlaylist(playlist: Playlist): Playlist {
-        val playlists = getPlaylists()
-        playlists.forEach {
-            if (it.title == playlist.title)
-                throw IllegalArgumentException("Playlist with title = ${playlist.title} already exists")
-        }
+    override fun addPlaylist(playlistBuilder: PlaylistBuilder): Playlist {
+//        val playlists = getPlaylists()
+//        playlists.forEach {
+//            if (it.title == playlist.title)
+//                throw IllegalArgumentException("Playlist with title = ${playlist.title} already exists")
+//        }
+//
+//        val ref: DocumentReference = collectionReference.document();
+//        ref.set(playlist)
+//
+//        return playlist
 
-        val ref: DocumentReference = collectionReference.document();
-        ref.set(playlist)
+        val playlist = Playlist(
+            playlistBuilder.id, playlistBuilder.uid, playlistBuilder.title, playlistBuilder.description,
+            playlistBuilder.category, playlistBuilder.thumbnailUrl, playlistBuilder.videoRefs,
+            playlistBuilder.searchIndex, Instant.now().toEpochMilli(),
+        )
 
+        collectionReference.document(playlist.id).set(playlist)
         return playlist
     }
 

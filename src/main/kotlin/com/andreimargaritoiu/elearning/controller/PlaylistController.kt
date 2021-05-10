@@ -1,5 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
+import com.andreimargaritoiu.elearning.model.builders.PlaylistBuilder
 import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.service.PlaylistService
@@ -31,7 +32,7 @@ class PlaylistController(private val playlistService: PlaylistService) {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    fun addPlaylist(@RequestBody playlist: Playlist): Playlist = playlistService.addPlaylist(playlist)
+    fun addPlaylist(@RequestBody playlistBuilder: PlaylistBuilder): Playlist = playlistService.addPlaylist(playlistBuilder)
 
     @PatchMapping("/{playlistId}")
     fun updatePlaylist(@PathVariable playlistId: String, @RequestBody playlistsUpdates: PlaylistUpdates): Playlist =
