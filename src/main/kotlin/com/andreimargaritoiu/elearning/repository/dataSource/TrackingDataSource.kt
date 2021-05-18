@@ -1,5 +1,7 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
+import com.andreimargaritoiu.elearning.model.builders.TrackingBuilder
+import com.andreimargaritoiu.elearning.model.models.Mentorship
 import com.andreimargaritoiu.elearning.model.models.Tracking
 import com.andreimargaritoiu.elearning.repository.generic.TrackingRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
@@ -9,6 +11,7 @@ import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
+import java.time.Instant
 
 @Repository
 class TrackingDataSource(firebaseInitialize: FirebaseInitialize): TrackingRepository {
@@ -27,14 +30,23 @@ class TrackingDataSource(firebaseInitialize: FirebaseInitialize): TrackingReposi
     }
 
 
-    override fun addTracking(tracking: Tracking) {
+    override fun addTracking(trackingBuilder: TrackingBuilder): Tracking {
         val trackings = getTrackings();
         trackings.forEach {
-            if (it.uid == tracking.uid && it.vid == tracking.vid)
+            if (it.uid == trackingBuilder.uid && it.vid == trackingBuilder.vid)
                 throw IllegalArgumentException("Tracking already exists")
         }
 
-        val ref: DocumentReference = collectionReference.document();
-        ref.set(tracking)
+        val ref: DocumentReference = collectionReference.document()
+        val tracking = Tracking(
+            ref.id,
+            trackingBuilder.uid,
+            trackingBuilder.vid,
+            Instant.now().toEpochMilli(),
+        )
+
+        collectionReference.document(ref.id).set(tracking)
+
+        return tracking
     }
 }

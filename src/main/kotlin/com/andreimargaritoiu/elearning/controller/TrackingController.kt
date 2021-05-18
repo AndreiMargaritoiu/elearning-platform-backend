@@ -1,5 +1,6 @@
 package com.andreimargaritoiu.elearning.controller
 
+import com.andreimargaritoiu.elearning.model.builders.TrackingBuilder
 import com.andreimargaritoiu.elearning.model.models.Tracking
 import com.andreimargaritoiu.elearning.service.TrackingService
 import org.springframework.http.HttpStatus
@@ -21,11 +22,11 @@ class TrackingController(private val trackingService: TrackingService) {
     fun handleNotFound(e: IllegalArgumentException): ResponseEntity<String> =
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
-    @GetMapping
-    fun getTrackings(): Collection<Tracking> = trackingService.getTrackings()
+    @GetMapping("/{userId}")
+    fun getTrackings(@PathVariable userId: String): Collection<Tracking> = trackingService.getTrackings(userId)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addTracking(@RequestBody tracking: Tracking) = trackingService.addTracking(tracking)
+    fun addTracking(@RequestBody trackingBuilder: TrackingBuilder): Tracking = trackingService.addTracking(trackingBuilder)
 
 }
