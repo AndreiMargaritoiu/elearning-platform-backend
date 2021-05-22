@@ -12,7 +12,6 @@ import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 @Repository
 class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {

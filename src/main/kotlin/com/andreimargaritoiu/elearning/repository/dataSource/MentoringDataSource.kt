@@ -13,7 +13,6 @@ import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 @Repository
 class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRepository {
@@ -66,9 +65,6 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
             updates["price"] = mentorshipUpdates.price
         }
 
-//        val future: CompletableFuture<Any> = CompletableFuture.supplyAsync {
-//            ref.update(updates).get()
-//        }
         ref.update(updates)
         return getMentorship(mentorshipId)
     }

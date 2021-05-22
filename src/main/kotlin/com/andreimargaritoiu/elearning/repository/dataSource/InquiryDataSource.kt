@@ -2,7 +2,6 @@ package com.andreimargaritoiu.elearning.repository.dataSource
 
 import com.andreimargaritoiu.elearning.model.builders.InquiryBuilder
 import com.andreimargaritoiu.elearning.model.models.Inquiry
-import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.repository.generic.InquiryRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.google.api.core.ApiFuture

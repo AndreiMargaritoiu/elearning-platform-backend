@@ -13,7 +13,6 @@ import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 @Repository
 class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository {
@@ -48,16 +47,6 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
 
         collectionReference.document(video.id).set(video)
         return video
-
-//        val ref: DocumentReference = collectionReference.document()
-//        val mentorship = Mentorship(
-//            ref.id, mentorshipBuilder.description, mentorshipBuilder.mentorId,
-//            mentorshipBuilder.mentorEmail, mentorshipBuilder.price, Instant.now().toEpochMilli()
-//        )
-//
-//        collectionReference.document(ref.id).set(mentorship)
-//
-//        return mentorship
     }
 
     override fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video {
@@ -71,10 +60,7 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
             updates["searchIndex"] = videoUpdates.searchIndex
         }
 
-        CompletableFuture.supplyAsync {
-            ref.update(updates)
-        }
-
+        ref.update(updates)
         return getVideo(videoId)
     }
 
