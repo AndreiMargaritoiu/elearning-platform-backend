@@ -13,6 +13,7 @@ import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Repository
 class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository {
@@ -70,7 +71,9 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
             updates["searchIndex"] = videoUpdates.searchIndex
         }
 
-        ref.update(updates)
+        CompletableFuture.supplyAsync {
+            ref.update(updates)
+        }
 
         return getVideo(videoId)
     }

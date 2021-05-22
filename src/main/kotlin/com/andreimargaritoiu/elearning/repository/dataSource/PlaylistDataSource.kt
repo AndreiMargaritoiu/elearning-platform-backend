@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
 import java.time.Instant
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Repository
 class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistRepository {
@@ -75,7 +76,9 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
             updates["videoRefs"] = playlistUpdates.videoRefs
         }
 
-        ref.update(updates)
+        CompletableFuture.supplyAsync {
+            ref.update(updates)
+        }
 
         return getPlaylist(playlistId)
     }

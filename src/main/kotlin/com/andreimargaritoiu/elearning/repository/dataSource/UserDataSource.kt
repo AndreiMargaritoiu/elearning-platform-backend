@@ -1,6 +1,5 @@
 package com.andreimargaritoiu.elearning.repository.dataSource
 
-import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.model.updates.UserUpdates
 import com.andreimargaritoiu.elearning.repository.generic.UserRepository
@@ -13,6 +12,7 @@ import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.stereotype.Repository
 import java.lang.IllegalArgumentException
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Repository
 class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
@@ -50,16 +50,31 @@ class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
     override fun updateUser(userId: String, userUpdates: UserUpdates): User {
         val ref: DocumentReference = collectionReference.document(userId)
         val updates: MutableMap<String, Any> = mutableMapOf()
-        if (userUpdates.profilePictureUrl.isNotEmpty()) {
-            updates["profilePictureUrl"] = userUpdates.profilePictureUrl
+        if (userUpdates.photoUrl.isNotEmpty()) {
+            updates["photoUrl"] = userUpdates.photoUrl
         }
         if (userUpdates.following.isNotEmpty()) {
             updates["following"] = userUpdates.following
         }
 
+//        lateinit var user: User;
+//
+//        CompletableFuture.runAsync {
+//            ref.update(updates)
+//        }.thenRun {
+//            user = getUser(userId)
+//        }
+//
+//        return user;
+//        updateFbUser(ref, updates)
+
         ref.update(updates)
         return getUser(userId)
     }
+
+//    suspend fun updateFbUser(ref: DocumentReference, updates: MutableMap<String, Any>) {
+//        ref.update(updates)
+//    }
 
     override fun deleteUser(userId: String) {
         val ref: DocumentReference = collectionReference.document(userId)

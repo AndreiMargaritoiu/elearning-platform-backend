@@ -62,14 +62,6 @@ class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryReposito
 //                throw IllegalArgumentException("Inquiry already exists")
 //        }
 
-//        print(inquiries)
-//
-//        val inquiriesList: Array<String> = inquiries.split(',').toTypedArray();
-//
-//        print(inquiriesList[0])
-//        print(inquiriesList[1])
-//        print(inquiriesList[2])
-
         inquiries.forEach {
             val ref: DocumentReference = collectionReference.document(it)
             val updates: MutableMap<String, Any> = mutableMapOf()

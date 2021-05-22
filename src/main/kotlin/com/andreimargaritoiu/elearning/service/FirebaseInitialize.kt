@@ -18,7 +18,7 @@ class FirebaseInitialize {
      fun initialize() {
         try {
             val serviceAccount = FileInputStream("./elearning-platform-e75ed-firebase-adminsdk-63ocv-fa29199ad2.json")
-            val options = FirebaseOptions.Builder()
+            val options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://elearning-platform-e75ed.firebaseio.com")
                     .setStorageBucket("elearning-platform-e75ed.appspot.com")

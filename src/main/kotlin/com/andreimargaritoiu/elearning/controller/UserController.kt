@@ -23,7 +23,7 @@ class UserController(private val userService: UserService) {
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
-    fun getUsers(): Collection<User> = userService.getUsers()
+    fun getUsers(@RequestParam followedBy: Optional<String>): Collection<User> = userService.getUsers(followedBy)
 
     @GetMapping("/{userId}")
     fun getUser(@PathVariable userId: String): User = userService.getUser(userId)
