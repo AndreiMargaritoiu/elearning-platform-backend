@@ -11,7 +11,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("api/inquiries")
-@CrossOrigin
 class InquiryController(private val inquiryService: InquiryService) {
 
     @ExceptionHandler(NoSuchElementException::class)

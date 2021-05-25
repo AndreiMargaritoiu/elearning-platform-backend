@@ -11,7 +11,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("api/users")
-@CrossOrigin
 class UserController(private val userService: UserService) {
 
     @ExceptionHandler(NoSuchElementException::class)

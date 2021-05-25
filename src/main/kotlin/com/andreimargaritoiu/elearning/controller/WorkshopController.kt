@@ -11,7 +11,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("api/workshops")
-@CrossOrigin
 class WorkshopController(private val workshopService: WorkshopService) {
 
     @ExceptionHandler(NoSuchElementException::class)

@@ -12,7 +12,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("api/videos")
-@CrossOrigin
 class VideoController(private val videoService: VideoService) {
 
     @ExceptionHandler(NoSuchElementException::class)

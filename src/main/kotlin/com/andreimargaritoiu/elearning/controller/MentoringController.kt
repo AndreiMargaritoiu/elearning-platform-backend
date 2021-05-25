@@ -9,11 +9,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 import java.util.*
+import com.google.firebase.auth.FirebaseAuth
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("api/mentoring")
-@CrossOrigin
 class MentoringController(private val mentoringService: MentoringService) {
+
+//    val logger: Logger = LoggerFactory.getLogger("Mentoring logger")
+//        logger.info("mak")
 
     @ExceptionHandler(NoSuchElementException::class)
     fun handleNotFound(e: NoSuchElementException): ResponseEntity<String> =
@@ -26,11 +31,22 @@ class MentoringController(private val mentoringService: MentoringService) {
     @GetMapping
     fun getMentorships(
         @RequestParam uid: Optional<String>,
-        @RequestParam category: Optional<Collection<String>>
-    ): Collection<Mentorship> = mentoringService.getMentorships(uid, category)
+        @RequestParam category: Optional<Collection<String>>,
+    ): Collection<Mentorship> =
+        mentoringService.getMentorships(uid, category)
+
 
     @GetMapping("/{mentorshipId}")
-    fun getMentorship(@PathVariable mentorshipId: String): Mentorship = mentoringService.getMentorship(mentorshipId)
+    fun getMentorship(@PathVariable mentorshipId: String, @RequestHeader idToken: String): Mentorship? {
+        val decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken)
+        println("caca$decodedToken")
+        val uid = decodedToken.uid
+        if (uid != null) {
+            return mentoringService.getMentorship(mentorshipId)
+        } else {
+            return null
+        }
+    }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

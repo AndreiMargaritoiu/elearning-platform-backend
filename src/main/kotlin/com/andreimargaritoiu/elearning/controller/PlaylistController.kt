@@ -12,7 +12,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("api/playlists")
-@CrossOrigin
 class PlaylistController(private val playlistService: PlaylistService) {
 
     @ExceptionHandler(NoSuchElementException::class)
