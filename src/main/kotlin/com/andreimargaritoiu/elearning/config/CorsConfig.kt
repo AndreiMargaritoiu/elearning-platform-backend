@@ -1,4 +1,4 @@
-package com.andreimargaritoiu.elearning.secuirty
+package com.andreimargaritoiu.elearning.config
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean

@@ -1,4 +1,4 @@
-package com.andreimargaritoiu.elearning.secuirty
+package com.andreimargaritoiu.elearning.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
