@@ -2,7 +2,10 @@ package com.andreimargaritoiu.elearning.controller
 
 import com.andreimargaritoiu.elearning.model.models.Workshop
 import com.andreimargaritoiu.elearning.model.builders.WorkshopBuilder
+import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.andreimargaritoiu.elearning.service.WorkshopService
+import com.google.firebase.auth.FirebaseAuth
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,6 +32,14 @@ class WorkshopController(private val workshopService: WorkshopService) {
     fun addWorkshop(@RequestBody workshopBuilder: WorkshopBuilder): Workshop =
         workshopService.addWorkshop(workshopBuilder)
 
+    @PatchMapping("/{workshopId}")
+    fun updateWorkshop(
+        @PathVariable workshopId: String,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
+    ): Workshop {
+        val userEmail: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).email
+        return workshopService.registerToWorkshop(userEmail, workshopId)
+    }
 
     @DeleteMapping("/{workshopId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -9,5 +9,6 @@ interface WorkshopRepository {
     fun getWorkshopById(workshopId: String): Workshop
     fun addWorkshop(workshopBuilder: WorkshopBuilder): Workshop
     fun deleteWorkshop(workshopId: String)
+    fun registerToWorkshop(userEmail: String, workshopId: String): Workshop
 
 }

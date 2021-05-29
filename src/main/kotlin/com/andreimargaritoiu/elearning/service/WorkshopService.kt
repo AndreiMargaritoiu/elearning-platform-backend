@@ -13,4 +13,6 @@ class WorkshopService(private val workshopDataSource: WorkshopDataSource) {
 
     fun deleteWorkshop(workshopId: String) = workshopDataSource.deleteWorkshop(workshopId)
     fun getWorkshops(): Collection<Workshop> = workshopDataSource.getWorkshops()
+    fun registerToWorkshop(userEmail: String, workshopId: String): Workshop =
+        workshopDataSource.registerToWorkshop(userEmail, workshopId)
 }

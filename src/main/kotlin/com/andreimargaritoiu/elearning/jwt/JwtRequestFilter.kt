@@ -22,7 +22,6 @@ import com.google.gson.Gson
 
 import com.andreimargaritoiu.elearning.model.models.ErrorResponse
 
-
 @Component
 class JwtRequestFilter: OncePerRequestFilter() {
 

@@ -5,6 +5,7 @@ import com.google.cloud.firestore.Firestore
 import com.google.cloud.storage.Bucket
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.cloud.FirestoreClient
 import com.google.firebase.cloud.StorageClient
 import org.springframework.stereotype.Service
@@ -30,6 +31,5 @@ class FirebaseInitialize {
     }
 
     fun getFirebase(): Firestore = FirestoreClient.getFirestore()
-    fun getStorage(): Bucket = StorageClient.getInstance().bucket();
-
+    fun getStorage(): Bucket = StorageClient.getInstance().bucket()
 }
