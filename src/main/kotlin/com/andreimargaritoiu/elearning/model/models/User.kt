@@ -6,5 +6,6 @@ data class User (
         val email: String = "",
         val photoUrl: String = "",
         val following: List<String> = emptyList(),
-        val searchIndex: List<String> = emptyList()
+        val searchIndex: List<String> = emptyList(),
+        val admin: Boolean = false,
 )

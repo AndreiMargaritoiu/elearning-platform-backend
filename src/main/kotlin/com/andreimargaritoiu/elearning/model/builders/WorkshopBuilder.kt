@@ -6,5 +6,6 @@ data class WorkshopBuilder(
     val location: String = "",
     val thumbnailUrl: String = "",
     val date: Long = 0,
-    val onlineEvent: Boolean = false
+    val onlineEvent: Boolean = false,
+    val capacity: Long = 0,
 )

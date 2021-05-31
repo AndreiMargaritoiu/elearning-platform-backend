@@ -50,6 +50,7 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
             workshopBuilder.date,
             workshopBuilder.onlineEvent,
             emptyList(),
+            workshopBuilder.capacity
         )
 
         collectionReference.document(ref.id).set(workshop)
@@ -66,11 +67,15 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
 
     override fun registerToWorkshop(userEmail: String, workshopId: String): Workshop {
         val ref: DocumentReference = collectionReference.document(workshopId)
-        val participants: List<String> = getWorkshopById(workshopId).participants
+        val workshop: Workshop = getWorkshopById(workshopId)
+        val participants: List<String> = workshop.participants
         val newParticipants = mutableListOf<String>()
         participants.forEach { newParticipants.add(it) }
-        if (newParticipants.contains(userEmail))
-            newParticipants.remove(userEmail) else newParticipants.add(userEmail)
+        if (newParticipants.contains(userEmail)) {
+            newParticipants.remove(userEmail)
+        } else if (newParticipants.size.toLong() != workshop.capacity){
+            newParticipants.add(userEmail)
+        }
 
         val updates: MutableMap<String, Any> = mutableMapOf()
         updates["participants"] = newParticipants

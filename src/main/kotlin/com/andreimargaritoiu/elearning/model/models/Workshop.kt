@@ -8,5 +8,6 @@ data class Workshop(
     val thumbnailUrl: String = "",
     val date: Long = 0,
     val onlineEvent: Boolean = false,
-    val participants: List<String> = emptyList()
+    val participants: List<String> = emptyList(),
+    val capacity: Long = 0,
 )
