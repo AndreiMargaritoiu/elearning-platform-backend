@@ -15,7 +15,7 @@ import java.util.*
 class VideoService(private val videoDataSource: VideoDataSource, private val playlistService: PlaylistService) {
 
     fun getVideo(videoId: String): Video = videoDataSource.getVideo(videoId)
-    fun addVideo(videoBuilder: VideoBuilder): Video = videoDataSource.addVideo(videoBuilder)
+    fun addVideo(videoBuilder: VideoBuilder, userId: String): Video = videoDataSource.addVideo(videoBuilder, userId)
     fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video =
             videoDataSource.updateVideo(videoId, videoUpdates)
     fun deleteVideo(videoId: String) {

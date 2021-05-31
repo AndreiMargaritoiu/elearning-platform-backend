@@ -4,6 +4,8 @@ import com.andreimargaritoiu.elearning.model.builders.PlaylistBuilder
 import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.service.PlaylistService
+import com.google.firebase.auth.FirebaseAuth
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,11 +18,11 @@ class PlaylistController(private val playlistService: PlaylistService) {
 
     @ExceptionHandler(NoSuchElementException::class)
     fun handleNotFound(e: NoSuchElementException): ResponseEntity<String> =
-            ResponseEntity(e.message, HttpStatus.NOT_FOUND)
+        ResponseEntity(e.message, HttpStatus.NOT_FOUND)
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleNotFound(e: IllegalArgumentException): ResponseEntity<String> =
-            ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
     fun getPlaylists(@RequestParam category: Optional<String>, @RequestParam uid: Optional<String>):
@@ -31,11 +33,17 @@ class PlaylistController(private val playlistService: PlaylistService) {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    fun addPlaylist(@RequestBody playlistBuilder: PlaylistBuilder): Playlist = playlistService.addPlaylist(playlistBuilder)
+    fun addPlaylist(
+        @RequestBody playlistBuilder: PlaylistBuilder,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
+    ): Playlist {
+        val userId: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).uid
+        return playlistService.addPlaylist(playlistBuilder, userId)
+    }
 
     @PatchMapping("/{playlistId}")
     fun updatePlaylist(@PathVariable playlistId: String, @RequestBody playlistsUpdates: PlaylistUpdates): Playlist =
-            playlistService.updatePlaylist(playlistId, playlistsUpdates)
+        playlistService.updatePlaylist(playlistId, playlistsUpdates)
 
     @DeleteMapping("/{playlistId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

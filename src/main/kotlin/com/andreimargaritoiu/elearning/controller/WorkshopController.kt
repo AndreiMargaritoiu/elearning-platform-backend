@@ -29,8 +29,13 @@ class WorkshopController(private val workshopService: WorkshopService) {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    fun addWorkshop(@RequestBody workshopBuilder: WorkshopBuilder): Workshop =
-        workshopService.addWorkshop(workshopBuilder)
+    fun addWorkshop(
+        @RequestBody workshopBuilder: WorkshopBuilder,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
+    ): Workshop {
+        val userId: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).uid
+        return workshopService.addWorkshop(workshopBuilder, userId)
+    }
 
     @PatchMapping("/{workshopId}")
     fun updateWorkshop(

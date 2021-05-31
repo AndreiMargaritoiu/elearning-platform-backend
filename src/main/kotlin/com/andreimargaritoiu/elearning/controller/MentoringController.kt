@@ -12,6 +12,7 @@ import java.util.*
 import com.google.firebase.auth.FirebaseAuth
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders
 
 @RestController
 @RequestMapping("api/mentoring")
@@ -37,21 +38,19 @@ class MentoringController(private val mentoringService: MentoringService) {
 
 
     @GetMapping("/{mentorshipId}")
-    fun getMentorship(@PathVariable mentorshipId: String, @RequestHeader idToken: String): Mentorship? {
-        val decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken)
-        println("caca$decodedToken")
-        val uid = decodedToken.uid
-        if (uid != null) {
-            return mentoringService.getMentorship(mentorshipId)
-        } else {
-            return null
-        }
+    fun getMentorship(@PathVariable mentorshipId: String): Mentorship {
+        return mentoringService.getMentorship(mentorshipId)
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    fun addMentorship(@RequestBody mentorshipBuilder: MentorshipBuilder): Mentorship =
-        mentoringService.addMentorship(mentorshipBuilder)
+    fun addMentorship(
+        @RequestBody mentorshipBuilder: MentorshipBuilder,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
+    ): Mentorship {
+        val userId = FirebaseAuth.getInstance().verifyIdToken(authHeader).uid
+        return mentoringService.addMentorship(mentorshipBuilder, userId)
+    }
 
     @PatchMapping("/{mentorshipId}")
     fun updateMentorship(@PathVariable mentorshipId: String, @RequestBody mentorshipUpdates: MentorshipUpdates):

@@ -38,13 +38,12 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
     }
 
 
-    override fun addMentorship(mentorshipBuilder: MentorshipBuilder): Mentorship {
+    override fun addMentorship(mentorshipBuilder: MentorshipBuilder, userId: String): Mentorship {
         val ref: DocumentReference = collectionReference.document()
         val mentorship = Mentorship(
             ref.id,
             mentorshipBuilder.description,
-            mentorshipBuilder.mentorId,
-            mentorshipBuilder.mentorEmail,
+            userId,
             mentorshipBuilder.price,
             Instant.now().toEpochMilli(),
             mentorshipBuilder.category

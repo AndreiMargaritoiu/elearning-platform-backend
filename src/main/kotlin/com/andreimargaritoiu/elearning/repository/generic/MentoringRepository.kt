@@ -8,7 +8,7 @@ interface MentoringRepository {
 
     fun getMentorships(): Collection<Mentorship>
     fun getMentorship(mentorshipId: String): Mentorship
-    fun addMentorship(mentorshipBuilder: MentorshipBuilder): Mentorship
+    fun addMentorship(mentorshipBuilder: MentorshipBuilder, userId: String): Mentorship
     fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates): Mentorship
     fun deleteMentorship(mentorshipId: String)
     

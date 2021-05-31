@@ -11,12 +11,15 @@ import java.util.*
 class PlaylistService(private val playlistDataSource: PlaylistDataSource) {
 
     fun getPlaylist(playlistId: String): Playlist = playlistDataSource.getPlaylist(playlistId)
-    fun addPlaylist(playlistBuilder: PlaylistBuilder): Playlist = playlistDataSource.addPlaylist(playlistBuilder)
-    fun updatePlaylist(playlistId: String, playlistsUpdates: PlaylistUpdates): Playlist
-            = playlistDataSource.updatePlaylist(playlistId, playlistsUpdates)
+    fun addPlaylist(playlistBuilder: PlaylistBuilder, userId: String): Playlist =
+        playlistDataSource.addPlaylist(playlistBuilder, userId)
+
+    fun updatePlaylist(playlistId: String, playlistsUpdates: PlaylistUpdates): Playlist =
+        playlistDataSource.updatePlaylist(playlistId, playlistsUpdates)
+
     fun deletePlaylist(playlistId: String) = playlistDataSource.deletePlaylist(playlistId)
     fun getPlaylists(category: Optional<String>, uid: Optional<String>): Collection<Playlist> {
-        val playlists: Collection<Playlist>  = playlistDataSource.getPlaylists()
+        val playlists: Collection<Playlist> = playlistDataSource.getPlaylists()
 
         if (!category.isEmpty) {
             return playlists.filter { it.category == category.get() }

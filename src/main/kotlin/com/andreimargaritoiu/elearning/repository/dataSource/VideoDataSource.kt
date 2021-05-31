@@ -38,10 +38,9 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
     }
 
 
-    override fun addVideo(videoBuilder: VideoBuilder): Video {
-//        val ref: DocumentReference = collectionReference.document()
+    override fun addVideo(videoBuilder: VideoBuilder, userId: String): Video {
         val video = Video(
-            videoBuilder.id, videoBuilder.uid, videoBuilder.videoUrl, videoBuilder.thumbnailUrl,
+            videoBuilder.id, userId, videoBuilder.videoUrl, videoBuilder.thumbnailUrl,
             videoBuilder.title, videoBuilder.description, Instant.now().toEpochMilli(), videoBuilder.searchIndex
         )
 

@@ -38,7 +38,7 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
                 ?: throw NoSuchElementException("Could not find playlist with id = $playlistId")
     }
 
-    override fun addPlaylist(playlistBuilder: PlaylistBuilder): Playlist {
+    override fun addPlaylist(playlistBuilder: PlaylistBuilder, userId: String): Playlist {
 //        val playlists = getPlaylists()
 //        playlists.forEach {
 //            if (it.title == playlist.title)
@@ -51,7 +51,7 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
 //        return playlist
 
         val playlist = Playlist(
-            playlistBuilder.id, playlistBuilder.uid, playlistBuilder.title, playlistBuilder.description,
+            playlistBuilder.id, userId, playlistBuilder.title, playlistBuilder.description,
             playlistBuilder.category, playlistBuilder.thumbnailUrl, playlistBuilder.videoRefs,
             playlistBuilder.searchIndex, Instant.now().toEpochMilli(),
         )

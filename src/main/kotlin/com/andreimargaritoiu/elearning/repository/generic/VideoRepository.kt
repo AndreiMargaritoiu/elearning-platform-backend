@@ -8,7 +8,7 @@ interface VideoRepository {
 
     fun getVideos(): Collection<Video>
     fun getVideo(videoId: String): Video
-    fun addVideo(videoBuilder: VideoBuilder): Video
+    fun addVideo(videoBuilder: VideoBuilder, userId: String): Video
     fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video
     fun deleteVideo(videoId: String)
 

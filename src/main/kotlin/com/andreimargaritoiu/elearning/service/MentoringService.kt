@@ -11,8 +11,8 @@ import java.util.*
 class MentoringService(private val mentoringDataSource: MentoringDataSource) {
 
     fun getMentorship(mentorshipId: String): Mentorship = mentoringDataSource.getMentorship(mentorshipId)
-    fun addMentorship(mentorshipBuilder: MentorshipBuilder): Mentorship =
-            mentoringDataSource.addMentorship(mentorshipBuilder)
+    fun addMentorship(mentorshipBuilder: MentorshipBuilder, userId: String): Mentorship =
+            mentoringDataSource.addMentorship(mentorshipBuilder, userId)
     fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates): Mentorship =
             mentoringDataSource.updateMentorship(mentorshipId, mentorshipUpdates)
     fun deleteMentorship(mentorshipId: String) = mentoringDataSource.deleteMentorship(mentorshipId)
