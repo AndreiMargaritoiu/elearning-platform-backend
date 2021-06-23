@@ -10,13 +10,13 @@ import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 @Repository
-class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistRepository {
+class PlaylistDataSource(firebaseInitialize: FirebaseInitialize) : PlaylistRepository {
 
     private final val collectionName = "playlists"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
@@ -35,7 +35,7 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
         val document: ApiFuture<DocumentSnapshot> = collectionReference.document(playlistId).get()
 
         return document.get().toObject(Playlist::class.java)
-                ?: throw NoSuchElementException("Could not find playlist with id = $playlistId")
+            ?: throw NoSuchElementException("Could not find playlist with id = $playlistId")
     }
 
     override fun addPlaylist(playlistBuilder: PlaylistBuilder, userId: String): Playlist {
@@ -60,7 +60,8 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
         return playlist
     }
 
-    override fun updatePlaylist(playlistId: String, playlistUpdates: PlaylistUpdates): Playlist {
+    @Async
+    override fun updatePlaylist(playlistId: String, playlistUpdates: PlaylistUpdates) {
         val ref: DocumentReference = collectionReference.document(playlistId)
         val updates: MutableMap<String, Any> = mutableMapOf()
         if (playlistUpdates.description.isNotEmpty()) {
@@ -74,11 +75,7 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize): PlaylistReposi
             updates["videoRefs"] = playlistUpdates.videoRefs
         }
 
-        CompletableFuture.supplyAsync {
-            ref.update(updates)
-        }
-
-        return getPlaylist(playlistId)
+        ref.update(updates)
     }
 
     override fun deletePlaylist(playlistId: String) {

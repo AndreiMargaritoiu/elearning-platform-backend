@@ -6,6 +6,7 @@ import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.dataSource.VideoDataSource
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -16,8 +17,14 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
 
     fun getVideo(videoId: String): Video = videoDataSource.getVideo(videoId)
     fun addVideo(videoBuilder: VideoBuilder, userId: String): Video = videoDataSource.addVideo(videoBuilder, userId)
-    fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video =
-            videoDataSource.updateVideo(videoId, videoUpdates)
+
+    @Async
+    fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video {
+        videoDataSource.updateVideo(videoId, videoUpdates)
+        Thread.sleep(2000)
+        return getVideo(videoId)
+    }
+
     fun deleteVideo(videoId: String) {
         videoDataSource.deleteVideo(videoId)
         val playlists: Collection<Playlist> =

@@ -46,7 +46,7 @@ class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
         return user
     }
 
-    override fun updateUser(userId: String, userUpdates: UserUpdates): User {
+    override fun updateUser(userId: String, userUpdates: UserUpdates) {
         val ref: DocumentReference = collectionReference.document(userId)
         val updates: MutableMap<String, Any> = mutableMapOf()
         if (userUpdates.photoUrl.isNotEmpty()) {
@@ -56,24 +56,8 @@ class UserDataSource(firebaseInitialize: FirebaseInitialize): UserRepository {
             updates["following"] = userUpdates.following
         }
 
-//        lateinit var user: User;
-//
-//        CompletableFuture.runAsync {
-//            ref.update(updates)
-//        }.thenRun {
-//            user = getUser(userId)
-//        }
-//
-//        return user;
-//        updateFbUser(ref, updates)
-
         ref.update(updates)
-        return getUser(userId)
     }
-
-//    suspend fun updateFbUser(ref: DocumentReference, updates: MutableMap<String, Any>) {
-//        ref.update(updates)
-//    }
 
     override fun deleteUser(userId: String) {
         val ref: DocumentReference = collectionReference.document(userId)

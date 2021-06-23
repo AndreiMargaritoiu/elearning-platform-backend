@@ -3,6 +3,7 @@ package com.andreimargaritoiu.elearning.service
 import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.model.updates.UserUpdates
 import com.andreimargaritoiu.elearning.repository.dataSource.UserDataSource
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -21,7 +22,13 @@ class UserService(private val userDataSource: UserDataSource) {
     }
     fun getUser(userId: String): User = userDataSource.getUser(userId)
     fun addUser(user: User): User = userDataSource.addUser(user)
-    fun updateUser(userId: String, userUpdates: UserUpdates): User = userDataSource.updateUser(userId, userUpdates) 
+
+    @Async
+    fun updateUser(userId: String, userUpdates: UserUpdates): User {
+        userDataSource.updateUser(userId, userUpdates)
+        Thread.sleep(2000)
+        return getUser(userId)
+    }
     fun deleteUser(userId: String) = userDataSource.deleteUser(userId)
 
 }

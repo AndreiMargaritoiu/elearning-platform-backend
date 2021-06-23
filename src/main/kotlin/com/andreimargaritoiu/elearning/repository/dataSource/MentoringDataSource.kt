@@ -10,6 +10,7 @@ import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -54,7 +55,8 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
         return mentorship
     }
 
-    override fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates): Mentorship {
+    @Async
+    override fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates) {
         val ref: DocumentReference = collectionReference.document(mentorshipId)
         val updates: MutableMap<String, Any> = mutableMapOf()
         if (mentorshipUpdates.description.isNotEmpty()) {
@@ -65,7 +67,6 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
         }
 
         ref.update(updates)
-        return getMentorship(mentorshipId)
     }
 
     override fun deleteMentorship(mentorshipId: String) {

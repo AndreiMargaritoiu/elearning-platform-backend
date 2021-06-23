@@ -8,7 +8,7 @@ interface UserRepository {
     fun getUsers(): Collection<User>
     fun getUser(userId: String): User
     fun addUser(user: User): User
-    fun updateUser(userId: String, userUpdates: UserUpdates): User
+    fun updateUser(userId: String, userUpdates: UserUpdates)
     fun deleteUser(userId: String)
 
 }

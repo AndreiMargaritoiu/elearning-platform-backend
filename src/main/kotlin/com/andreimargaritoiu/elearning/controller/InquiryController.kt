@@ -25,9 +25,9 @@ class InquiryController(private val inquiryService: InquiryService) {
 
     @GetMapping()
     fun getInquiries(
-        @RequestHeader idToken: String
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
     ): Collection<Inquiry> {
-        val userId: String = FirebaseAuth.getInstance().verifyIdToken(idToken).uid
+        val userId: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).uid
         return inquiryService.getInquiries(userId)
     }
 

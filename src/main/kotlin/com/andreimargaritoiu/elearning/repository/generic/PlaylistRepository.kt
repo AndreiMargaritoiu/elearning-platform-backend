@@ -9,7 +9,7 @@ interface PlaylistRepository {
     fun getPlaylists(): Collection<Playlist>
     fun getPlaylist(playlistId: String): Playlist
     fun addPlaylist(playlistBuilder: PlaylistBuilder, userId: String): Playlist
-    fun updatePlaylist(playlistId: String, playlistUpdates: PlaylistUpdates): Playlist
+    fun updatePlaylist(playlistId: String, playlistUpdates: PlaylistUpdates)
     fun deletePlaylist(playlistId: String)
     
 }

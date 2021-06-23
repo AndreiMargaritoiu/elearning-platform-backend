@@ -10,6 +10,7 @@ import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -34,7 +35,7 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
         val document: ApiFuture<DocumentSnapshot> = collectionReference.document(videoId).get()
 
         return document.get().toObject(Video::class.java)
-                ?: throw NoSuchElementException("Could not find video with id = $videoId")
+            ?: throw NoSuchElementException("Could not find video with id = $videoId")
     }
 
 
@@ -48,7 +49,8 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
         return video
     }
 
-    override fun updateVideo(videoId: String, videoUpdates: VideoUpdates): Video {
+    @Async
+    override fun updateVideo(videoId: String, videoUpdates: VideoUpdates) {
         val ref: DocumentReference = collectionReference.document(videoId)
         val updates: MutableMap<String, Any> = mutableMapOf()
         if (videoUpdates.description.isNotEmpty()) {
@@ -60,7 +62,6 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
         }
 
         ref.update(updates)
-        return getVideo(videoId)
     }
 
     override fun deleteVideo(videoId: String) {
