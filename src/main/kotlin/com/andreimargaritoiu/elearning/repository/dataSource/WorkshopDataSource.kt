@@ -4,15 +4,11 @@ import com.andreimargaritoiu.elearning.model.models.Workshop
 import com.andreimargaritoiu.elearning.model.builders.WorkshopBuilder
 import com.andreimargaritoiu.elearning.repository.generic.WorkshopRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
+
 import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.*
-import com.google.firebase.auth.FirebaseAuth
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Repository
 import java.util.*
-import org.springframework.security.core.context.SecurityContextHolder
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Repository
 class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepository {
@@ -20,11 +16,10 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
     private final val collectionName = "workshops"
     val collectionReference: CollectionReference = firebaseInitialize.getFirebase().collection(collectionName)
 
-    val logger: Logger = LoggerFactory.getLogger("Workshop Datasource logger")
-
     override fun getWorkshops(): Collection<Workshop> {
         val workshops = mutableListOf<Workshop>()
         val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
+
         querySnapshot.get().documents.forEach {
             workshops.add(it.toObject(Workshop::class.java))
         }
@@ -54,7 +49,6 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
         )
 
         collectionReference.document(ref.id).set(workshop)
-
         return workshop
     }
 
@@ -65,15 +59,17 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
         ref.delete()
     }
 
-    override fun registerToWorkshop(userEmail: String, workshopId: String): Workshop {
+    override fun registerToWorkshop(userEmail: String, workshopId: String) {
         val ref: DocumentReference = collectionReference.document(workshopId)
         val workshop: Workshop = getWorkshopById(workshopId)
         val participants: List<String> = workshop.participants
         val newParticipants = mutableListOf<String>()
+
         participants.forEach { newParticipants.add(it) }
+
         if (newParticipants.contains(userEmail)) {
             newParticipants.remove(userEmail)
-        } else if (newParticipants.size.toLong() != workshop.capacity){
+        } else if (newParticipants.size.toLong() != workshop.capacity) {
             newParticipants.add(userEmail)
         }
 
@@ -81,6 +77,5 @@ class WorkshopDataSource(firebaseInitialize: FirebaseInitialize) : WorkshopRepos
         updates["participants"] = newParticipants
 
         ref.update(updates)
-        return getWorkshopById(workshopId)
     }
 }

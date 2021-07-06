@@ -3,6 +3,7 @@ package com.andreimargaritoiu.elearning.controller
 import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.model.updates.UserUpdates
 import com.andreimargaritoiu.elearning.service.UserService
+
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,11 +16,11 @@ class UserController(private val userService: UserService) {
 
     @ExceptionHandler(NoSuchElementException::class)
     fun handleNotFound(e: NoSuchElementException): ResponseEntity<String> =
-            ResponseEntity(e.message, HttpStatus.NOT_FOUND)
+        ResponseEntity(e.message, HttpStatus.NOT_FOUND)
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleNotFound(e: IllegalArgumentException): ResponseEntity<String> =
-            ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @GetMapping
     fun getUsers(@RequestParam followedBy: Optional<String>): Collection<User> = userService.getUsers(followedBy)
@@ -33,7 +34,7 @@ class UserController(private val userService: UserService) {
 
     @PatchMapping("/{userId}")
     fun updateUser(@PathVariable userId: String, @RequestBody userUpdates: UserUpdates): User =
-            userService.updateUser(userId, userUpdates)
+        userService.updateUser(userId, userUpdates)
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

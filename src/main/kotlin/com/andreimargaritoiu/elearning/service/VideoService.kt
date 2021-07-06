@@ -2,10 +2,12 @@ package com.andreimargaritoiu.elearning.service
 
 import com.andreimargaritoiu.elearning.model.builders.VideoBuilder
 import com.andreimargaritoiu.elearning.model.models.Playlist
+import com.andreimargaritoiu.elearning.model.models.User
 import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.dataSource.VideoDataSource
+
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -13,9 +15,15 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
-class VideoService(private val videoDataSource: VideoDataSource, private val playlistService: PlaylistService) {
+class VideoService(
+    private val videoDataSource: VideoDataSource,
+    private val playlistService: PlaylistService,
+    private val userService: UserService,
+    private val trackingService: TrackingService
+) {
 
     fun getVideo(videoId: String): Video = videoDataSource.getVideo(videoId)
+
     fun addVideo(videoBuilder: VideoBuilder, userId: String): Video = videoDataSource.addVideo(videoBuilder, userId)
 
     @Async
@@ -28,7 +36,8 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
     fun deleteVideo(videoId: String) {
         videoDataSource.deleteVideo(videoId)
         val playlists: Collection<Playlist> =
-                playlistService.getPlaylists(category = Optional.empty(), uid = Optional.empty())
+            playlistService.getPlaylists(category = Optional.empty(), uid = Optional.empty())
+
         playlists.forEach {
             if (it.videoRefs.contains(videoId)) {
                 val updates = PlaylistUpdates(videoRefs = it.videoRefs.filter { itt -> itt != videoId })
@@ -37,8 +46,10 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
         }
     }
 
-    fun getVideos(uid: Optional<String>, playlistId: Optional<String>,
-                  trending: Optional<Boolean>): Collection<Video> {
+    fun getVideos(
+        uid: Optional<String>, playlistId: Optional<String>,
+        trending: Optional<Boolean>, followers: Optional<Boolean>, userId: String,
+    ): Collection<Video> {
         val videos: Collection<Video> = videoDataSource.getVideos()
 
         if (!uid.isEmpty) {
@@ -56,9 +67,39 @@ class VideoService(private val videoDataSource: VideoDataSource, private val pla
         }
 
         if (!trending.isEmpty && trending.get()) {
-            return videos.filter { elem ->
-                Instant.ofEpochMilli(elem.createdAt).plus(100, ChronoUnit.DAYS).isAfter(Instant.now());
+            val trendingMap = mutableMapOf<String, Int>()
+            val recentVideos = mutableListOf<Video>()
+
+            videos.filter { elem ->
+                Instant.ofEpochMilli(elem.createdAt).plus(100, ChronoUnit.DAYS).isAfter(Instant.now())
+            }.map {
+                trendingMap.put(it.id, 0)
             }
+
+            trackingService.getTrackings(Optional.empty()).map {
+                if (trendingMap[it.vid] != null) {
+                    trendingMap.replace(it.vid, trendingMap.getValue(it.vid), trendingMap.getValue(it.vid) + 1)
+                }
+            }
+
+            trendingMap.toList()
+                .sortedByDescending { (_, value) -> value }
+                .take(10)
+                .toMap()
+                .map {
+                    val currentVideo: Video? = videos.find { v -> v.id == it.key }
+                    if (currentVideo != null) {
+                        recentVideos.add(currentVideo)
+                    }
+                }
+
+            return recentVideos
+        }
+
+        if (!followers.isEmpty && followers.get()) {
+            val appUser: User = userService.getUser(userId)
+
+            return videos.filter { appUser.following.contains(it.uid) }.sortedByDescending { it.createdAt }
         }
 
         return videos;

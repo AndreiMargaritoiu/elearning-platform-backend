@@ -1,5 +1,7 @@
 package com.andreimargaritoiu.elearning.jwt
 
+import com.andreimargaritoiu.elearning.model.models.ErrorResponse
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseToken
 import org.springframework.http.HttpStatus
@@ -10,20 +12,16 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.io.IOException
 import java.util.ArrayList
-
 import com.google.gson.Gson
 
-import com.andreimargaritoiu.elearning.model.models.ErrorResponse
-
 @Component
-class JwtRequestFilter: OncePerRequestFilter() {
+class JwtRequestFilter : OncePerRequestFilter() {
 
     fun setErrorResponse(
         status: HttpStatus,

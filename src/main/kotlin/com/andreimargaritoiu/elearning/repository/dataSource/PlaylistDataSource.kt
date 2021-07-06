@@ -5,6 +5,7 @@ import com.andreimargaritoiu.elearning.model.models.Playlist
 import com.andreimargaritoiu.elearning.model.updates.PlaylistUpdates
 import com.andreimargaritoiu.elearning.repository.generic.PlaylistRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
+
 import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
@@ -24,6 +25,7 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize) : PlaylistRepos
     override fun getPlaylists(): Collection<Playlist> {
         val playlists = mutableListOf<Playlist>()
         val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
+
         querySnapshot.get().documents.forEach {
             playlists.add(it.toObject(Playlist::class.java))
         }
@@ -39,17 +41,6 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize) : PlaylistRepos
     }
 
     override fun addPlaylist(playlistBuilder: PlaylistBuilder, userId: String): Playlist {
-//        val playlists = getPlaylists()
-//        playlists.forEach {
-//            if (it.title == playlist.title)
-//                throw IllegalArgumentException("Playlist with title = ${playlist.title} already exists")
-//        }
-//
-//        val ref: DocumentReference = collectionReference.document();
-//        ref.set(playlist)
-//
-//        return playlist
-
         val playlist = Playlist(
             playlistBuilder.id, userId, playlistBuilder.title, playlistBuilder.description,
             playlistBuilder.category, playlistBuilder.thumbnailUrl, playlistBuilder.videoRefs,
@@ -64,13 +55,16 @@ class PlaylistDataSource(firebaseInitialize: FirebaseInitialize) : PlaylistRepos
     override fun updatePlaylist(playlistId: String, playlistUpdates: PlaylistUpdates) {
         val ref: DocumentReference = collectionReference.document(playlistId)
         val updates: MutableMap<String, Any> = mutableMapOf()
+
         if (playlistUpdates.description.isNotEmpty()) {
             updates["description"] = playlistUpdates.description
         }
+
         if (playlistUpdates.title.isNotEmpty() && playlistUpdates.searchIndex.isNotEmpty()) {
             updates["title"] = playlistUpdates.title
             updates["searchIndex"] = playlistUpdates.searchIndex
         }
+
         if (playlistUpdates.videoRefs.isNotEmpty()) {
             updates["videoRefs"] = playlistUpdates.videoRefs
         }

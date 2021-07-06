@@ -3,6 +3,7 @@ package com.andreimargaritoiu.elearning.controller
 import com.andreimargaritoiu.elearning.model.models.Inquiry
 import com.andreimargaritoiu.elearning.model.builders.InquiryBuilder
 import com.andreimargaritoiu.elearning.service.InquiryService
+
 import com.google.firebase.auth.FirebaseAuth
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -33,10 +34,12 @@ class InquiryController(private val inquiryService: InquiryService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addInquiry(@RequestBody mentorId: String, @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String): Inquiry {
-        val userEmail: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).email
-        val inquiryBuilder = InquiryBuilder(mentorId, userEmail)
-        return inquiryService.addInquiry(inquiryBuilder)
+    fun addInquiry(
+        @RequestBody inquiryBuilder: InquiryBuilder,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
+    ): Inquiry {
+        val inquirerEmail: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).email
+        return inquiryService.addInquiry(inquiryBuilder, inquirerEmail)
     }
 
     @PatchMapping

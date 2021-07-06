@@ -1,9 +1,9 @@
 package com.andreimargaritoiu.elearning.controller
 
-import com.andreimargaritoiu.elearning.model.builders.InquiryBuilder
 import com.andreimargaritoiu.elearning.model.builders.TrackingBuilder
 import com.andreimargaritoiu.elearning.model.models.Tracking
 import com.andreimargaritoiu.elearning.service.TrackingService
+
 import com.google.firebase.auth.FirebaseAuth
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -27,7 +27,7 @@ class TrackingController(private val trackingService: TrackingService) {
     @GetMapping()
     fun getTrackings(@RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String): Collection<Tracking> {
         val userId: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).uid
-        return trackingService.getTrackings(userId)
+        return trackingService.getTrackings(Optional.of(userId))
     }
 
     @PostMapping

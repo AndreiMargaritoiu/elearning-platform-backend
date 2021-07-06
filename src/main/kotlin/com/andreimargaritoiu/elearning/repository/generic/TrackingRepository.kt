@@ -7,5 +7,5 @@ interface TrackingRepository {
 
     fun getTrackings(): Collection<Tracking>
     fun addTracking(trackingBuilder: TrackingBuilder): Tracking
-    
+
 }

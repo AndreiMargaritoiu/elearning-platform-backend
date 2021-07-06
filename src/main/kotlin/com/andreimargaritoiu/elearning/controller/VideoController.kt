@@ -4,6 +4,7 @@ import com.andreimargaritoiu.elearning.model.builders.VideoBuilder
 import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.service.VideoService
+
 import com.google.firebase.auth.FirebaseAuth
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -26,10 +27,16 @@ class VideoController(private val videoService: VideoService) {
 
     @GetMapping
     fun getVideos(
-        @RequestParam uid: Optional<String>, @RequestParam playlistId: Optional<String>,
-        @RequestParam trending: Optional<Boolean>
-    ): Collection<Video> =
-        videoService.getVideos(uid, playlistId, trending)
+        @RequestParam uid: Optional<String>,
+        @RequestParam playlistId: Optional<String>,
+        @RequestParam trending: Optional<Boolean>,
+        @RequestParam followers: Optional<Boolean>,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) authHeader: String
+    ): Collection<Video> {
+        val userId: String = FirebaseAuth.getInstance().verifyIdToken(authHeader).uid
+        return videoService.getVideos(uid, playlistId, trending, followers, userId)
+    }
+
 
     @GetMapping("/{videoId}")
     fun getVideo(@PathVariable videoId: String): Video = videoService.getVideo(videoId)

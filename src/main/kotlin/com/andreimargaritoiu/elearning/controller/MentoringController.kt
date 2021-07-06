@@ -4,22 +4,18 @@ import com.andreimargaritoiu.elearning.model.models.Mentorship
 import com.andreimargaritoiu.elearning.model.builders.MentorshipBuilder
 import com.andreimargaritoiu.elearning.model.updates.MentorshipUpdates
 import com.andreimargaritoiu.elearning.service.MentoringService
+
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 import java.util.*
 import com.google.firebase.auth.FirebaseAuth
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders
 
 @RestController
 @RequestMapping("api/mentoring")
 class MentoringController(private val mentoringService: MentoringService) {
-
-//    val logger: Logger = LoggerFactory.getLogger("Mentoring logger")
-//        logger.info("mak")
 
     @ExceptionHandler(NoSuchElementException::class)
     fun handleNotFound(e: NoSuchElementException): ResponseEntity<String> =

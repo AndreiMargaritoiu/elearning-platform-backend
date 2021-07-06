@@ -4,6 +4,7 @@ import com.andreimargaritoiu.elearning.model.builders.InquiryBuilder
 import com.andreimargaritoiu.elearning.model.models.Inquiry
 import com.andreimargaritoiu.elearning.repository.generic.InquiryRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
+
 import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
@@ -36,12 +37,12 @@ class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryReposito
             ?: throw NoSuchElementException("Could not find inquiry with id = $inquiryId")
     }
 
-    override fun addInquiry(inquiryBuilder: InquiryBuilder): Inquiry {
+    override fun addInquiry(inquiryBuilder: InquiryBuilder, inquirerEmail: String): Inquiry {
         val ref: DocumentReference = collectionReference.document()
         val inquiry = Inquiry(
             ref.id,
             inquiryBuilder.mentorId,
-            inquiryBuilder.inquirerEmail,
+            inquirerEmail,
             false,
             Instant.now().toEpochMilli()
         )
@@ -53,14 +54,6 @@ class InquiryDataSource(firebaseInitialize: FirebaseInitialize): InquiryReposito
 
     override fun updateInquiries(inquiries: List<String>) {
         // TODO check if there is no inexistant inquiry
-//        val appInquiries = getInquiries();
-//        appInquiries.forEach {
-//            inquiries.firstOrNull {
-//                it = appInquiries.
-//                })
-//                throw IllegalArgumentException("Inquiry already exists")
-//        }
-
         inquiries.forEach {
             val ref: DocumentReference = collectionReference.document(it)
             val updates: MutableMap<String, Any> = mutableMapOf()

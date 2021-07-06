@@ -5,6 +5,7 @@ import com.andreimargaritoiu.elearning.model.models.Video
 import com.andreimargaritoiu.elearning.model.updates.VideoUpdates
 import com.andreimargaritoiu.elearning.repository.generic.VideoRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
+
 import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
@@ -24,6 +25,7 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
     override fun getVideos(): Collection<Video> {
         val videos = mutableListOf<Video>()
         val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
+
         querySnapshot.get().documents.forEach {
             videos.add(it.toObject(Video::class.java))
         }
@@ -53,9 +55,11 @@ class VideoDataSource(firebaseInitialize: FirebaseInitialize) : VideoRepository 
     override fun updateVideo(videoId: String, videoUpdates: VideoUpdates) {
         val ref: DocumentReference = collectionReference.document(videoId)
         val updates: MutableMap<String, Any> = mutableMapOf()
+
         if (videoUpdates.description.isNotEmpty()) {
             updates["description"] = videoUpdates.description
         }
+
         if (videoUpdates.title.isNotEmpty() && videoUpdates.searchIndex.isNotEmpty()) {
             updates["title"] = videoUpdates.title
             updates["searchIndex"] = videoUpdates.searchIndex

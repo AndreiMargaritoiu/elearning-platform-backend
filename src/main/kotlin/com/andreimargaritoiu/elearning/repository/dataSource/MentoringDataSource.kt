@@ -5,6 +5,7 @@ import com.andreimargaritoiu.elearning.model.builders.MentorshipBuilder
 import com.andreimargaritoiu.elearning.model.updates.MentorshipUpdates
 import com.andreimargaritoiu.elearning.repository.generic.MentoringRepository
 import com.andreimargaritoiu.elearning.service.FirebaseInitialize
+
 import com.google.api.core.ApiFuture
 import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.DocumentReference
@@ -24,6 +25,7 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
     override fun getMentorships(): Collection<Mentorship> {
         val mentorships = mutableListOf<Mentorship>()
         val querySnapshot: ApiFuture<QuerySnapshot> = collectionReference.get()
+
         querySnapshot.get().documents.forEach {
             mentorships.add(it.toObject(Mentorship::class.java))
         }
@@ -59,9 +61,11 @@ class MentoringDataSource(firebaseInitialize: FirebaseInitialize) : MentoringRep
     override fun updateMentorship(mentorshipId: String, mentorshipUpdates: MentorshipUpdates) {
         val ref: DocumentReference = collectionReference.document(mentorshipId)
         val updates: MutableMap<String, Any> = mutableMapOf()
+
         if (mentorshipUpdates.description.isNotEmpty()) {
             updates["description"] = mentorshipUpdates.description
         }
+
         if (mentorshipUpdates.price.toString() != "0") {
             updates["price"] = mentorshipUpdates.price
         }

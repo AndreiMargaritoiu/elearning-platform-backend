@@ -2,8 +2,8 @@ package com.andreimargaritoiu.elearning.controller
 
 import com.andreimargaritoiu.elearning.model.models.Workshop
 import com.andreimargaritoiu.elearning.model.builders.WorkshopBuilder
-import com.andreimargaritoiu.elearning.service.FirebaseInitialize
 import com.andreimargaritoiu.elearning.service.WorkshopService
+
 import com.google.firebase.auth.FirebaseAuth
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus

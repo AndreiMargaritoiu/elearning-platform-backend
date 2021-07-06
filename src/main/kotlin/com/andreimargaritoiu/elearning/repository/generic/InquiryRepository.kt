@@ -6,7 +6,7 @@ import com.andreimargaritoiu.elearning.model.models.Inquiry
 interface InquiryRepository {
 
     fun getInquiries(): Collection<Inquiry>
-    fun addInquiry(inquiryBuilder: InquiryBuilder): Inquiry
+    fun addInquiry(inquiryBuilder: InquiryBuilder, inquirerEmail: String): Inquiry
     fun updateInquiries(inquiries: List<String>)
 
 }
